@@ -8,44 +8,49 @@ public class PlaceTower : MonoBehaviour
     public LayerMask layermask;
     public GameObject previewBox;
     private GameObject _previewBox;
-    private Vector3 _oldPos;
-    private float _oldX;
-    private float _oldZ;
+    private Renderer _previewBoxRenderer;
+    private Vector3 _newPos;
+    private float _newX;
+    private float _newZ;
     // Start is called before the first frame update
     void Start()
     {
         _previewBox = Instantiate(previewBox, Vector3.zero, Quaternion.identity);
         _previewBox.SetActive(true);
-        _oldPos = _previewBox.transform.position;
-        _oldX = _oldPos.x;
-        _oldZ = _oldPos.z;
+        _previewBoxRenderer = _previewBox.GetComponent<Renderer>();
+        _newPos = _previewBox.transform.position;
+        _newX = _newPos.x;
+        _newZ = _newPos.z;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, layermask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, layermask))
         {
-            if (hit.transform.gameObject.layer != 10)
+            var newPos = CalculateNewPosition(hit);
+            _previewBox.transform.position = newPos;
+
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                
-                var newPos = CalculateNewPosition(hit);
-                _previewBox.transform.position = newPos;
+                _previewBoxRenderer.material.color = Color.green;
                 if (Input.GetButton("Fire1"))
                 {
                     CreateTower(hit, newPos);
                 }
             }
+            else
+                _previewBoxRenderer.material.color = Color.red;
             if (Input.GetButton("Fire2"))
             {
                 DeleteTower(hit);
             }
         }
+        Debug.DrawLine(Camera.main.transform.position, hit.point);
+
 
 
 
@@ -53,22 +58,26 @@ public class PlaceTower : MonoBehaviour
 
     private Vector3 CalculateNewPosition(RaycastHit hit)
     {
-        _oldX = Mathf.Round(hit.point.x);
-        _oldZ = Mathf.Round(hit.point.z);
-        return new Vector3(_oldX, hit.point.y, _oldZ);
+        _newX = Mathf.Round(hit.point.x);
+        _newZ = Mathf.Round(hit.point.z);
+        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {                                       //Adding half of the boxes height, to avoid it spawning halfway through the plane
+            return new Vector3(_newX, hit.point.y + (_previewBox.transform.localScale.y / 2), _newZ);
+        }
+        return new Vector3(_newX, hit.transform.position.y, _newZ);
+
     }
 
     private void CreateTower(RaycastHit hit, Vector3 newPos)
     {
         var box = Instantiate(tower, newPos, Quaternion.identity);
         box.SetActive(true);
-        Debug.DrawLine(Camera.main.transform.position, hit.point);
     }
 
     private static void DeleteTower(RaycastHit hit)
     {
         print(hit.transform.gameObject.layer);
-        if (hit.transform.gameObject.layer != 9)
+        if (hit.transform.gameObject.layer != LayerMask.NameToLayer("Ground"))
             Destroy(hit.transform.gameObject);
     }
 }

@@ -7,7 +7,6 @@ public class PlaceTower : MonoBehaviour
     public GameObject tower;
     public LayerMask layermask;
     public GameObject previewBox;
-    private GameObject _previewBox;
     private Renderer _previewBoxRenderer;
     private Vector3 _newPos;
     private float _newX;
@@ -15,10 +14,8 @@ public class PlaceTower : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _previewBox = Instantiate(previewBox, Vector3.zero, Quaternion.identity);
-        _previewBox.SetActive(true);
-        _previewBoxRenderer = _previewBox.GetComponent<Renderer>();
-        _newPos = _previewBox.transform.position;
+        _previewBoxRenderer = previewBox.GetComponent<Renderer>();
+        _newPos = previewBox.transform.position;
         _newX = _newPos.x;
         _newZ = _newPos.z;
 
@@ -32,7 +29,7 @@ public class PlaceTower : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, layermask))
         {
             var newPos = CalculateNewPosition(hit);
-            _previewBox.transform.position = newPos;
+            previewBox.transform.position = newPos;
 
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
@@ -62,7 +59,7 @@ public class PlaceTower : MonoBehaviour
         _newZ = Mathf.Round(hit.point.z);
         if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {                                       //Adding half of the boxes height, to avoid it spawning halfway through the plane
-            return new Vector3(_newX, hit.point.y + (_previewBox.transform.localScale.y / 2), _newZ);
+            return new Vector3(_newX, hit.point.y + (previewBox.transform.localScale.y / 2), _newZ);
         }
         return new Vector3(_newX, hit.transform.position.y, _newZ);
 

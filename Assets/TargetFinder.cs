@@ -15,31 +15,34 @@ public class TargetFinder : MonoBehaviour
 
     void Update()
     {
-        targets = Physics.OverlapSphere(transform.position, range, attackLayer, QueryTriggerInteraction.Ignore);
-        length = targets.Length;
-        _selectedTarget = SelectTarget(targets);
 
-        if (_selectedTarget != null && Debug.isDebugBuild)
-            Debug.DrawLine(transform.position, _selectedTarget.transform.position, Color.red);
+
+
+        targets = Physics.OverlapSphere(transform.position, range, attackLayer, QueryTriggerInteraction.Ignore);
+
+        if (targets.Length != 0)
+            _selectedTarget = SelectTarget(targets);
+
+
+
+        if (_selectedTarget != null)
+        {
+
+            if (Vector3.Distance(transform.position, _selectedTarget.transform.position) < range)
+            {
+                if (Debug.isDebugBuild)
+                    Debug.DrawLine(transform.position, _selectedTarget.transform.position, Color.red);
+            }
+        }
     }
+
 
     private Collider SelectTarget(Collider[] targets)
     {
-
-        if (targets.Length != 0)
-        {
-            return SelectClosestTarget(targets);
-        }
-        return null;
-    }
-
-    private Collider SelectClosestTarget(Collider[] targets)
-    {
+        if (_selectedTarget == null)
+            return targets[0];
         if (i < targets.Length)
         {
-            if (_selectedTarget == null)
-                return targets[0];
-
             var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
             var curTargetPos = Vector3.Distance(_selectedTarget.transform.position, transform.position);
 
@@ -68,8 +71,11 @@ public class TargetFinder : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = new Color(0, 50, 0, .05f);
-        Gizmos.DrawSphere(transform.position, range);
+        if (Debug.isDebugBuild)
+        {
+            Gizmos.color = new Color(0, 50, 0, .05f);
+            Gizmos.DrawSphere(transform.position, range);
+        }
     }
 
 }

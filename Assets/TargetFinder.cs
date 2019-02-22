@@ -61,7 +61,6 @@ public class TargetFinder : MonoBehaviour
 
         }
         i = 0;
-        print("closest - null");
         return _selectedTarget;
     }
 

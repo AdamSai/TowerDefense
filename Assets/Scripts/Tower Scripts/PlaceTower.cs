@@ -7,6 +7,7 @@ public class PlaceTower : MonoBehaviour
     public GameObject tower;
     public LayerMask layermask;
     public GameObject previewBox;
+    public ObjectPooler objectPooler;
     private Renderer _previewBoxRenderer;
     private Vector3 _newPos;
     private float _newX;
@@ -36,7 +37,7 @@ public class PlaceTower : MonoBehaviour
                 _previewBoxRenderer.material.color = Color.green;
                 if (Input.GetButton("Fire1"))
                 {
-                    CreateTower(hit, newPos);
+                    CreateTower(newPos);
                 }
             }
             else
@@ -65,16 +66,18 @@ public class PlaceTower : MonoBehaviour
 
     }
 
-    private void CreateTower(RaycastHit hit, Vector3 newPos)
+    private void CreateTower(Vector3 newPos)
     {
-        var box = Instantiate(tower, newPos, Quaternion.identity);
+        var box = objectPooler.GetPooledObject();
+        if (box == null)
+            return;
+        box.transform.position = newPos;
         box.SetActive(true);
     }
 
     private static void DeleteTower(RaycastHit hit)
     {
-        print(hit.transform.gameObject.layer);
         if (hit.transform.gameObject.layer != LayerMask.NameToLayer("Ground"))
-            Destroy(hit.transform.gameObject);
+            hit.transform.gameObject.SetActive(false);
     }
 }

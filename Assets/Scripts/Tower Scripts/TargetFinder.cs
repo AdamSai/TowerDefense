@@ -8,30 +8,28 @@ public class TargetFinder : MonoBehaviour
     public float range = 15f;
     public LayerMask attackLayer;
     public bool attackClosestTarget = true;
-    public Collider _selectedTarget { get; private set; }
+    public Collider selectedTarget { get; private set; }
     private Collider[] targets;
     int i = 0;
     int length = 0;
 
-    void Update()
+    void FixedUpdate()
     {
-
-
 
         targets = Physics.OverlapSphere(transform.position, range, attackLayer, QueryTriggerInteraction.Ignore);
 
         if (targets.Length != 0)
-            _selectedTarget = SelectTarget(targets);
+            selectedTarget = SelectTarget(targets);
+        else
+            selectedTarget = null;
 
 
-
-        if (_selectedTarget != null)
+        if (selectedTarget != null)
         {
-
-            if (Vector3.Distance(transform.position, _selectedTarget.transform.position) < range)
+            if (Vector3.Distance(selectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)
             {
-                if (Debug.isDebugBuild)
-                    Debug.DrawLine(transform.position, _selectedTarget.transform.position, Color.red);
+
+                Debug.DrawLine(transform.position, selectedTarget.transform.position, Color.red);
             }
         }
     }
@@ -39,43 +37,44 @@ public class TargetFinder : MonoBehaviour
 
     private Collider SelectTarget(Collider[] targets)
     {
-        if (_selectedTarget == null)
+        if (selectedTarget == null)
             return targets[0];
+
         if (i < targets.Length)
         {
             var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
-            var curTargetPos = Vector3.Distance(_selectedTarget.transform.position, transform.position);
+            var selectedTargetPos = Vector3.Distance(selectedTarget.transform.position, transform.position);
 
-            if (attackClosestTarget && newTargetPos < curTargetPos)
+            if (attackClosestTarget && newTargetPos < selectedTargetPos)
             {
                 i++;
                 return targets[i - 1];
             }
-            else if (!attackClosestTarget && newTargetPos > curTargetPos)
+            else if (!attackClosestTarget && newTargetPos > selectedTargetPos)
             {
                 i++;
                 return targets[i - 1];
             }
-            else if (curTargetPos < range)
+            else if (selectedTargetPos < range)
             {
                 i++;
-                return _selectedTarget;
+                return selectedTarget;
             }
-
         }
+
         i = 0;
-        return _selectedTarget;
+        return selectedTarget;
     }
 
 
 
     private void OnDrawGizmos()
     {
-        if (Debug.isDebugBuild)
-        {
-            Gizmos.color = new Color(0, 50, 0, .05f);
-            Gizmos.DrawSphere(transform.position, range);
-        }
+        //if (Debug.isDebugBuild)
+        //{
+        //    Gizmos.color = new Color(0, 50, 0, .05f);
+        //    Gizmos.DrawSphere(transform.position, range);
+        //}
     }
 
 }

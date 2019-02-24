@@ -18,12 +18,13 @@ public class PreviewTower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(colliders.Count != 0)
+        if (colliders.Count != 0)
         {
             playerController.canPlaceTower = false;
             material.color = Color.red;
 
-        }else
+        }
+        else
         {
             material.color = Color.green;
             playerController.canPlaceTower = true;
@@ -37,8 +38,8 @@ public class PreviewTower : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-                               //TODO: replace this with a method which raycasts & selects the tower, which can then be sold
-        if (Input.GetButtonDown("Fire2") && colliders.Contains(other))
+        //TODO: replace this with a method which raycasts & selects the tower, which can then be sold
+        if (Input.GetButton("Fire2") && colliders.Contains(other))
         {
             colliders.Remove(other);
             playerController.DeleteTower(other);
@@ -46,19 +47,25 @@ public class PreviewTower : MonoBehaviour
 
         else if (other.gameObject.tag == "Tower" && (other.transform.position - transform.position).sqrMagnitude <= 3 && !colliders.Contains(other))
         {
+            other.GetComponent<Renderer>().material.color = Color.magenta;
             colliders.Add(other);
-        } else if(other.gameObject.tag == "Tower" && (other.transform.position - transform.position).sqrMagnitude > 3 && colliders.Contains(other))
+        }
+        else if (other.gameObject.tag == "Tower" && (other.transform.position - transform.position).sqrMagnitude > 3 && colliders.Contains(other))
         {
-            
+            other.GetComponent<Renderer>().material.color = Color.white;
+
             colliders.Remove(other);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-     
-        
+        if (other.gameObject.tag == "Tower" && colliders.Contains(other))
+        {
+            other.GetComponent<Renderer>().material.color = Color.white;
             colliders.Remove(other);
+
+        }
 
     }
 

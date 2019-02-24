@@ -12,6 +12,7 @@ public class PlaceTower : MonoBehaviour
     private Vector3 _newPos;
     private float _newX;
     private float _newZ;
+    public bool canPlaceTower = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,19 +33,12 @@ public class PlaceTower : MonoBehaviour
             var newPos = CalculateNewPosition(hit);
             previewBox.transform.position = newPos;
 
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            if (canPlaceTower)
             {
-                _previewBoxRenderer.material.color = Color.green;
-                if (Input.GetButton("Fire1"))
+                if (Input.GetButtonDown("Fire1"))
                 {
                     CreateTower(newPos);
                 }
-            }
-            else
-                _previewBoxRenderer.material.color = Color.red;
-            if (Input.GetButton("Fire2"))
-            {
-                DeleteTower(hit);
             }
         }
         Debug.DrawLine(Camera.main.transform.position, hit.point);
@@ -75,9 +69,8 @@ public class PlaceTower : MonoBehaviour
         box.SetActive(true);
     }
 
-    private static void DeleteTower(RaycastHit hit)
-    {
-        if (hit.transform.gameObject.layer != LayerMask.NameToLayer("Ground"))
-            hit.transform.gameObject.SetActive(false);
+    public void DeleteTower(Collider coll)
+    { 
+        coll.gameObject.SetActive(false);
     }
 }

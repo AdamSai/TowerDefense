@@ -26,7 +26,7 @@ public partial class TowerAttack : MonoBehaviour
     void Attack()
     {
         canAttack = false;
-        selectedTarget = GetComponent<TargetFinder>().selectedTarget;
+        selectedTarget = GetComponent<TargetFinder>().SelectedTarget;
         StartCoroutine(SetCanAttack());
 
         if (!instantAttack && selectedTarget != null)

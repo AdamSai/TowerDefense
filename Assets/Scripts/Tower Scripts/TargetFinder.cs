@@ -8,7 +8,7 @@ public class TargetFinder : MonoBehaviour
     public float range = 15f;
     public LayerMask attackLayer;
     public bool attackClosestTarget = true;
-    public Collider selectedTarget { get; private set; }
+    public Collider SelectedTarget { get; private set; }
     private Collider[] targets;
     int i = 0;
     int length = 0;
@@ -19,17 +19,17 @@ public class TargetFinder : MonoBehaviour
         targets = Physics.OverlapSphere(transform.position, range, attackLayer, QueryTriggerInteraction.Ignore);
 
         if (targets.Length != 0)
-            selectedTarget = SelectTarget(targets);
+            SelectedTarget = SelectTarget(targets);
         else
-            selectedTarget = null;
+            SelectedTarget = null;
 
 
-        if (selectedTarget != null)
+        if (SelectedTarget != null)
         {
-            if (Vector3.Distance(selectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)
+            if (Vector3.Distance(SelectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)
             {
 
-                Debug.DrawLine(transform.position, selectedTarget.transform.position, Color.red);
+                Debug.DrawLine(transform.position, SelectedTarget.transform.position, Color.red);
             }
         }
     }
@@ -37,13 +37,13 @@ public class TargetFinder : MonoBehaviour
 
     private Collider SelectTarget(Collider[] targets)
     {
-        if (selectedTarget == null)
+        if (SelectedTarget == null)
             return targets[0];
 
         if (i < targets.Length)
         {
             var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
-            var selectedTargetPos = Vector3.Distance(selectedTarget.transform.position, transform.position);
+            var selectedTargetPos = Vector3.Distance(SelectedTarget.transform.position, transform.position);
 
             if (attackClosestTarget && newTargetPos < selectedTargetPos)
             {
@@ -58,12 +58,12 @@ public class TargetFinder : MonoBehaviour
             else if (selectedTargetPos < range)
             {
                 i++;
-                return selectedTarget;
+                return SelectedTarget;
             }
         }
 
         i = 0;
-        return selectedTarget;
+        return SelectedTarget;
     }
 
 

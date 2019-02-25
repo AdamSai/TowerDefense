@@ -8,6 +8,8 @@ public class PlaceTower : MonoBehaviour
     public LayerMask layermask;
     public GameObject previewBox;
     public ObjectPooler objectPooler;
+    public Pathfinding[] pathFinder;
+    public Grid grid;
     private Renderer _previewBoxRenderer;
     private Vector3 _newPos;
     private float _newX;
@@ -38,6 +40,13 @@ public class PlaceTower : MonoBehaviour
                 if (Input.GetButtonDown("Fire1"))
                 {
                     CreateTower(newPos);
+                    grid.CreateGrid();
+                    foreach(Pathfinding pfinder in pathFinder)
+                    {
+                    if(pfinder.foundPath)
+                        StartCoroutine(pfinder.FindPath());
+
+                    }
                 }
             }
         }

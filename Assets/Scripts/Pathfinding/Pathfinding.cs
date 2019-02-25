@@ -10,6 +10,8 @@ public class Pathfinding : MonoBehaviour
     //public Transform StartPosition;//Starting position to pathfind from
     public Transform TargetPosition;//Starting position to pathfind to
     public bool foundPath = false;
+    private float Counter = 0;
+    
     private void Awake()//When the program starts
     {
         GridReference = GameObject.Find("Game Manager").GetComponent<Grid>();//Get a reference to the game manager
@@ -21,10 +23,15 @@ public class Pathfinding : MonoBehaviour
 
     public IEnumerator FindPath()
     {
-        print("starting");
+        Counter = 0;
         foundPath = false;
         while (!foundPath)
         {
+            Counter += Time.deltaTime;
+            if(Counter > 5)
+            {
+                break;
+            }
             var a_StartPos = transform.position;
             var a_TargetPos = TargetPosition.position;
             Node StartNode = GridReference.NodeFromWorldPoint(a_StartPos);//Gets the node closest to the starting position
@@ -34,7 +41,6 @@ public class Pathfinding : MonoBehaviour
             HashSet<Node> ClosedList = new HashSet<Node>();//Hashset of nodes for the closed list
 
             OpenList.Add(StartNode);//Add the starting node to the open list to begin the program
-            print("Finding path");
             while (OpenList.Count > 0)//Whilst there is something in the open list
             {
                 Node CurrentNode = OpenList[0];//Create a node and set it to the first item in the open list
@@ -96,7 +102,7 @@ public class Pathfinding : MonoBehaviour
         }
         foundPath = true;
         FinalPath.Reverse();//Reverse the path to get the correct order
-        GridReference.FinalPath = FinalPath;
+        //GridReference.FinalPath = FinalPath;
         enemy.i = 0;
         enemy.FinalPath = FinalPath;//Set the final path
 

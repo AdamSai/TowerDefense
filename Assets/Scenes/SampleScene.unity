@@ -3978,7 +3978,7 @@ GameObject:
   - component: {fileID: 645204672}
   - component: {fileID: 645204671}
   - component: {fileID: 645204675}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5575,7 +5575,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 5943
+    m_Bits: 1847
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1

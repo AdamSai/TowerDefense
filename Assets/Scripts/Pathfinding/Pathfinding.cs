@@ -6,7 +6,7 @@ public class Pathfinding : MonoBehaviour
 {
 
     Grid GridReference;//For referencing the grid class
-    public EnemyController enemy;
+    //public EnemyController enemy;
     //public Transform StartPosition;//Starting position to pathfind from
     public Transform TargetPosition;//Starting position to pathfind to
     public bool foundPath = false;
@@ -15,7 +15,7 @@ public class Pathfinding : MonoBehaviour
     private void Awake()//When the program starts
     {
         GridReference = GameObject.Find("Game Manager").GetComponent<Grid>();//Get a reference to the game manager
-        enemy = GetComponent<EnemyController>();
+        //enemy = GetComponent<EnemyController>();
         foundPath = true;
     }
 
@@ -103,8 +103,8 @@ public class Pathfinding : MonoBehaviour
         foundPath = true;
         FinalPath.Reverse();//Reverse the path to get the correct order
         //GridReference.FinalPath = FinalPath;
-        enemy.i = 0;
-        enemy.FinalPath = FinalPath;//Set the final path
+        //enemy.i = 0;
+        //enemy.FinalPath = FinalPath;//Set the final path
 
     }
 

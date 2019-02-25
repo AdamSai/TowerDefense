@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GetSize : MonoBehaviour
 {
-    Renderer renderer;
+    new Renderer renderer;
     // Start is called before the first frame update
     void Start()
     {

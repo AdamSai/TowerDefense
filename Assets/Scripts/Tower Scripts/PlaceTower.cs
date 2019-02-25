@@ -1,15 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlaceTower : MonoBehaviour
 {
     public GameObject tower;
+    public NavMeshSurface surface;
     public LayerMask layermask;
     public GameObject previewBox;
     public ObjectPooler objectPooler;
-    public Pathfinding[] pathFinder;
-    public Grid grid;
     private Renderer _previewBoxRenderer;
     private Vector3 _newPos;
     private float _newX;
@@ -18,6 +18,7 @@ public class PlaceTower : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(buildNavMesh());
         _previewBoxRenderer = previewBox.GetComponent<Renderer>();
         _newPos = previewBox.transform.position;
         _newX = _newPos.x;
@@ -40,13 +41,9 @@ public class PlaceTower : MonoBehaviour
                 if (Input.GetButtonDown("Fire1"))
                 {
                     CreateTower(newPos);
-                    grid.CreateGrid();
-                    foreach(Pathfinding pfinder in pathFinder)
-                    {
-                    if(pfinder.foundPath)
-                        StartCoroutine(pfinder.FindPath());
+                    StartCoroutine(buildNavMesh());
 
-                    }
+
                 }
             }
         }
@@ -63,9 +60,9 @@ public class PlaceTower : MonoBehaviour
         _newZ = Mathf.Round(hit.point.z);
         if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {                                       //Adding half of the boxes height, to avoid it spawning halfway through the plane
-            return new Vector3(_newX, hit.point.y + (previewBox.transform.localScale.y / 2), _newZ);
+            return new Vector3(_newX, hit.point.y + (previewBox.transform.localScale.y / 2) - 0.01f, _newZ);
         }
-        return new Vector3(_newX, hit.transform.position.y, _newZ);
+        return new Vector3(_newX, hit.transform.position.y - 0.01f, _newZ);
 
     }
 
@@ -76,10 +73,19 @@ public class PlaceTower : MonoBehaviour
             return;
         box.transform.position = newPos;
         box.SetActive(true);
+
+
     }
 
     public void DeleteTower(Collider coll)
-    { 
+    {
         coll.gameObject.SetActive(false);
+    }
+
+
+    IEnumerator buildNavMesh()
+    {
+        surface.BuildNavMesh();
+        yield return null;
     }
 }

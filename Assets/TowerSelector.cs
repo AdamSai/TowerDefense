@@ -18,10 +18,15 @@ public class TowerSelector : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && uiController.ShowingBuildUI)
         {
-            playerController.SetObjectPooler(TowerPoolers[0]);
+            SelectObectPooler();
         }
 
         if (!uiController.ShowingBuildUI)
             playerController.SetObjectPooler(null);
+    }
+
+    public void SelectObectPooler()
+    {
+        playerController.SetObjectPooler(TowerPoolers[0]); ;
     }
 }

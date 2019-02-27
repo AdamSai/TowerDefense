@@ -5,13 +5,12 @@ using UnityEngine.AI;
 
 public class PlaceTower : MonoBehaviour
 {
-    public GameObject tower;
     public NavMeshSurface surface;
     public LayerMask layermask;
     public GameObject previewBox;
-    public ObjectPooler objectPooler;
+    private ObjectPooler objectPooler;
     public bool canPlaceTower = true;
-    public bool placingTower = true;
+    public UIController uiController;
     private Renderer _previewBoxRenderer;
     private Vector3 _newPos;
     private GameObject selectedObject;
@@ -19,6 +18,7 @@ public class PlaceTower : MonoBehaviour
     private float _newZ;
     private float doubleClickTimer = 0;
     private TargetToUI targetUI;
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,25 +39,42 @@ public class PlaceTower : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, layermask))
         {
+
             var newPos = CalculateNewPosition(hit);
             previewBox.transform.position = newPos;
+
+            if (objectPooler)
+            {
+                previewBox.SetActive(true);
+
+            }
+            if (uiController.ShowingBuildUI)
+            {
+                targetUI.parent.SetActive(false);
+
+            }
+
+            else
+            {
+                previewBox.SetActive(false);
+            }
             if (Input.GetButtonDown("Fire1"))
             {
-                if (canPlaceTower && placingTower)
+                if (canPlaceTower && objectPooler && uiController.ShowingBuildUI)
                 {
                     targetUI.parent.SetActive(false);
-
                     selectedObject = null;
                     CreateTower(newPos);
                     StartCoroutine(buildNavMesh());
 
                 }
-                else
+                else if (hit.transform.tag == "Tower" && !uiController.ShowingBuildUI)
                 {
                     selectedObject = hit.transform.gameObject;
                     targetUI.SetSelectedTower(selectedObject);
                     targetUI.parent.SetActive(true);
                 }
+
 
             }
         }
@@ -102,5 +119,10 @@ public class PlaceTower : MonoBehaviour
     {
         surface.BuildNavMesh();
         yield return null;
+    }
+
+    public void SetObjectPooler(ObjectPooler newPooler)
+    {
+        objectPooler = newPooler;
     }
 }

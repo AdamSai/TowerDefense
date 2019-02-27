@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIController : MonoBehaviour
 {
     public GameObject BuildUI;
-    private bool ShowingBuildUI = false;
+    public bool ShowingBuildUI { get; private set; } =  false;
     // Start is called before the first frame update
     void Start()
     {

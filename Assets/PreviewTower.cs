@@ -5,14 +5,13 @@ using UnityEngine;
 public class PreviewTower : MonoBehaviour
 {
     private Material material;
-    private PlaceTower playerController;
+    public PlaceTower playerController;
     private List<Collider> colliders;
     // Start is called before the first frame update
     void Start()
     {
         colliders = new List<Collider>();
         material = GetComponent<Renderer>().material;
-        playerController = GameObject.Find("Player Controller").GetComponent<PlaceTower>();
     }
 
     // Update is called once per frame
@@ -57,6 +56,8 @@ public class PreviewTower : MonoBehaviour
             colliders.Remove(other);
         }
     }
+
+   
 
     private void OnTriggerExit(Collider other)
     {

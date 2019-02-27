@@ -32,6 +32,7 @@ public class TargetFinder : MonoBehaviour
             var lookPos = SelectedTarget.transform.position - transform.position;
             lookPos.y = 0;
             var rotation = Quaternion.LookRotation(lookPos);
+
             towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
             
             if (Vector3.Distance(SelectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)

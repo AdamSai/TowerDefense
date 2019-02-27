@@ -4,6 +4,7 @@ using UnityEngine;
 [ExecuteAlways]
 public partial class TowerAttack : MonoBehaviour
 {
+    public string towerName = "Tower";
     public float attackDamage = 10f;
     [Tooltip("If this is selected, the attack damage will arrive instantly at the selected target")] public bool instantAttack = false;
     public float attackCooldown = 1f;

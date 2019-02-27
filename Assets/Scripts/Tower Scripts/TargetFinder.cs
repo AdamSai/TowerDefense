@@ -10,7 +10,12 @@ public class TargetFinder : MonoBehaviour
     public bool attackClosestTarget = true;
     public Collider SelectedTarget { get; private set; }
     private Collider[] targets;
+    private Transform towerMesh;
 
+    private void Start()
+    {
+        towerMesh = transform.GetChild(0).GetChild(1);
+    }
     void FixedUpdate()
     {
 
@@ -24,6 +29,11 @@ public class TargetFinder : MonoBehaviour
 
         if (SelectedTarget != null)
         {
+            var lookPos = SelectedTarget.transform.position - transform.position;
+            lookPos.y = 0;
+            var rotation = Quaternion.LookRotation(lookPos);
+            towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
+            
             if (Vector3.Distance(SelectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)
             {
 
@@ -35,29 +45,26 @@ public class TargetFinder : MonoBehaviour
 
     private Collider SelectTarget(Collider[] targets)
     {
-        if (SelectedTarget == null)
-            return targets[0];
+        var CurTarget = targets[0];
+        
 
         for (int i = 0;  i < targets.Length; i++)
         {
             var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
-            var selectedTargetPos = Vector3.Distance(SelectedTarget.transform.position, transform.position);
+            var selectedTargetPos = Vector3.Distance(CurTarget.transform.position, transform.position);
 
             if (attackClosestTarget && newTargetPos < selectedTargetPos)
             {
-                return targets[i];
+                CurTarget = targets[i];
             }
-            else if (!attackClosestTarget && newTargetPos > selectedTargetPos)
-            {
-                return targets[i];
-            }
-            else if (selectedTargetPos < range)
-            {
-                return SelectedTarget;
-            }
+   
+            //else if (selectedTargetPos < range)
+            //{
+            //    return CurTarget;
+            //}
         }
 
-        return SelectedTarget;
+        return CurTarget;
     }
 
 

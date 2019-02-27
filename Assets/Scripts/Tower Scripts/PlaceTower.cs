@@ -10,11 +10,16 @@ public class PlaceTower : MonoBehaviour
     public LayerMask layermask;
     public GameObject previewBox;
     public ObjectPooler objectPooler;
+    public bool canPlaceTower = true;
+    public bool placingTower = true;
     private Renderer _previewBoxRenderer;
     private Vector3 _newPos;
+    private GameObject selectedObject;
     private float _newX;
     private float _newZ;
-    public bool canPlaceTower = true;
+    private float doubleClickTimer = 0;
+    private TargetToUI targetUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +28,7 @@ public class PlaceTower : MonoBehaviour
         _newPos = previewBox.transform.position;
         _newX = _newPos.x;
         _newZ = _newPos.z;
+        targetUI = GameObject.Find("Game Manager").GetComponent<TargetToUI>();
 
     }
 
@@ -35,16 +41,24 @@ public class PlaceTower : MonoBehaviour
         {
             var newPos = CalculateNewPosition(hit);
             previewBox.transform.position = newPos;
-
-            if (canPlaceTower)
+            if (Input.GetButtonDown("Fire1"))
             {
-                if (Input.GetButtonDown("Fire1"))
+                if (canPlaceTower && placingTower)
                 {
+                    targetUI.parent.SetActive(false);
+
+                    selectedObject = null;
                     CreateTower(newPos);
                     StartCoroutine(buildNavMesh());
 
-
                 }
+                else
+                {
+                    selectedObject = hit.transform.gameObject;
+                    targetUI.SetSelectedTower(selectedObject);
+                    targetUI.parent.SetActive(true);
+                }
+
             }
         }
         Debug.DrawLine(Camera.main.transform.position, hit.point);
@@ -79,6 +93,7 @@ public class PlaceTower : MonoBehaviour
 
     public void DeleteTower(Collider coll)
     {
+        buildNavMesh();
         coll.gameObject.SetActive(false);
     }
 

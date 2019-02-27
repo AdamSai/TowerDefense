@@ -7,40 +7,83 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
 
-    public List<Node> FinalPath;
     public Transform destination;
     public float movementSpeed;
-    public int i;
-    private NavMeshAgent agent;
+    public float timeToDestroyIfNoPath = 2f;
+    public LayerMask TowerLayer;
     bool shouldMove = false;
-    float Counter;
+    float DestroyTowerTimer;
+    NavMeshAgent agent;
     NavMeshPath moveToPath;
+    PlayerLifeManager plManager;
+    Collider[] targets;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        FinalPath = new List<Node>();
         agent = GetComponent<NavMeshAgent>();
         shouldMove = true;
         moveToPath = new NavMeshPath();
-
+        plManager = GameObject.Find("Game Manager").GetComponent<PlayerLifeManager>();
+        agent.speed = movementSpeed;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        Counter += Time.deltaTime;
         NavMesh.CalculatePath(transform.position, destination.position, agent.areaMask, moveToPath);
-
         StartCoroutine(MoveEnemy());
+
+        if(DestroyTowerTimer >= timeToDestroyIfNoPath)
+        {
+            LookForTower();
+        }
+
         if (agent.pathStatus != NavMeshPathStatus.PathComplete)
         {
-          //  print("no path");
+            DestroyTowerTimer += Time.deltaTime;
+        }
+        else
+        {
+            DestroyTowerTimer = 0;
+        }
 
+
+        if((transform.position - destination.position).sqrMagnitude < 0.1f)
+        {
+            gameObject.SetActive(false);
+            plManager.DecrementLife();
         }
     }
 
+    private void LookForTower()
+    {
+        Collider ClosestTarget = null;
+        targets = Physics.OverlapSphere(transform.position, 2f, TowerLayer, QueryTriggerInteraction.Collide);
+
+        for(int i = 0; i < targets.Length; i++)
+        {
+            if (ClosestTarget == null)
+            {
+                ClosestTarget = targets[0];
+            }
+            if((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude < (targets[i].transform.position - destination.transform.position).sqrMagnitude)
+            {
+                ClosestTarget = targets[i];
+            }
+        }
+
+        if(targets.Length > 0)
+            DestroyClosestTarget(ClosestTarget);
+
+    }
+
+    private void DestroyClosestTarget(Collider closestTarget)
+    {
+        closestTarget.gameObject.SetActive(false);
+    }
 
     private IEnumerator MoveEnemy()
     {

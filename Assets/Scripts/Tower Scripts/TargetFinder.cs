@@ -10,8 +10,6 @@ public class TargetFinder : MonoBehaviour
     public bool attackClosestTarget = true;
     public Collider SelectedTarget { get; private set; }
     private Collider[] targets;
-    int i = 0;
-    int length = 0;
 
     void FixedUpdate()
     {
@@ -40,29 +38,25 @@ public class TargetFinder : MonoBehaviour
         if (SelectedTarget == null)
             return targets[0];
 
-        if (i < targets.Length)
+        for (int i = 0;  i < targets.Length; i++)
         {
             var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
             var selectedTargetPos = Vector3.Distance(SelectedTarget.transform.position, transform.position);
 
             if (attackClosestTarget && newTargetPos < selectedTargetPos)
             {
-                i++;
-                return targets[i - 1];
+                return targets[i];
             }
             else if (!attackClosestTarget && newTargetPos > selectedTargetPos)
             {
-                i++;
-                return targets[i - 1];
+                return targets[i];
             }
             else if (selectedTargetPos < range)
             {
-                i++;
                 return SelectedTarget;
             }
         }
 
-        i = 0;
         return SelectedTarget;
     }
 

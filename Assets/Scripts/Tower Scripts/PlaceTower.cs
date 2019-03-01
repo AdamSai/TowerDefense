@@ -7,6 +7,7 @@ public class PlaceTower : MonoBehaviour
 {
     public NavMeshSurface surface;
     public LayerMask layermask;
+    public LayerMask towerLayer;
     public GameObject previewBox;
     private ObjectPooler objectPooler;
     public bool canPlaceTower = true;
@@ -17,7 +18,8 @@ public class PlaceTower : MonoBehaviour
     private float _newX;
     private float _newZ;
     private float doubleClickTimer = 0;
-    private TargetToUI targetUI;
+    private TargetToUI targetInfoUI;
+    Collider[] targets;
 
 
     // Start is called before the first frame update
@@ -28,7 +30,7 @@ public class PlaceTower : MonoBehaviour
         _newPos = previewBox.transform.position;
         _newX = _newPos.x;
         _newZ = _newPos.z;
-        targetUI = GameObject.Find("Game Manager").GetComponent<TargetToUI>();
+        targetInfoUI = GameObject.Find("Game Manager").GetComponent<TargetToUI>();
 
     }
 
@@ -41,16 +43,19 @@ public class PlaceTower : MonoBehaviour
         {
 
             var newPos = CalculateNewPosition(hit);
-            previewBox.transform.position = newPos;
 
-            if (objectPooler)
+            if (objectPooler != null)
             {
+                CheckForCollisions();
+
+                previewBox.transform.position = newPos;
                 previewBox.SetActive(true);
 
             }
+
             if (uiController.ShowingBuildUI)
             {
-                targetUI.parent.SetActive(false);
+                targetInfoUI.parent.SetActive(false);
 
             }
 
@@ -58,11 +63,12 @@ public class PlaceTower : MonoBehaviour
             {
                 previewBox.SetActive(false);
             }
+
             if (Input.GetButtonDown("Fire1"))
             {
-                if (canPlaceTower && objectPooler && uiController.ShowingBuildUI)
+                if (canPlaceTower && objectPooler != null && uiController.ShowingBuildUI)
                 {
-                    targetUI.parent.SetActive(false);
+                    targetInfoUI.parent.SetActive(false);
                     selectedObject = null;
                     CreateTower(newPos);
                     StartCoroutine(buildNavMesh());
@@ -71,18 +77,33 @@ public class PlaceTower : MonoBehaviour
                 else if (hit.transform.tag == "Tower" && !uiController.ShowingBuildUI)
                 {
                     selectedObject = hit.transform.gameObject;
-                    targetUI.SetSelectedTower(selectedObject);
-                    targetUI.parent.SetActive(true);
+                    targetInfoUI.SetSelectedTower(selectedObject);
+                    targetInfoUI.parent.SetActive(true);
                 }
-
-
             }
         }
-        Debug.DrawLine(Camera.main.transform.position, hit.point);
 
 
 
 
+    }
+
+    private void CheckForCollisions()
+    {
+        var RaycastPoint = new Vector3(previewBox.transform.position.x, previewBox.transform.position.y + 2, previewBox.transform.position.z);
+        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, towerLayer, QueryTriggerInteraction.Ignore))
+        {
+            if (hit2.transform.gameObject.tag == "Tower")
+            {
+                previewBox.GetComponent<Renderer>().material.color = new Color(140, 0, 0, 0f);
+                canPlaceTower = false;
+            }
+        }
+        else
+        {
+            previewBox.GetComponent<Renderer>().material.color = new Color(0, 140, 0, 0f);
+            canPlaceTower = true;
+        }
     }
 
     private Vector3 CalculateNewPosition(RaycastHit hit)
@@ -124,5 +145,13 @@ public class PlaceTower : MonoBehaviour
     public void SetObjectPooler(ObjectPooler newPooler)
     {
         objectPooler = newPooler;
+    }
+    private void OnDrawGizmos()
+    {
+        if (Debug.isDebugBuild)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawSphere(previewBox.transform.position, .5f);
+        }
     }
 }

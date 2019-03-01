@@ -405,7 +405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 23852242}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -769,7 +769,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 39684443}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1481,7 +1481,6 @@ GameObject:
   - component: {fileID: 68972050}
   - component: {fileID: 68972049}
   - component: {fileID: 68972048}
-  - component: {fileID: 68972052}
   - component: {fileID: 68972053}
   m_Layer: 11
   m_Name: Preview Tower
@@ -1555,26 +1554,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68972047}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.8, y: 59.2, z: -24.03}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.01, y: 1.01, z: 2.01}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1337688094}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &68972052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68972047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 351074429381433409feb075c9132547, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerController: {fileID: 1337688093}
 --- !u!54 &68972053
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1677,7 +1663,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 87530348}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1911,7 +1897,7 @@ Transform:
   - {fileID: 1469266740}
   - {fileID: 1912821018}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &104581349
 GameObject:
@@ -2908,7 +2894,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 163969391}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3061,7 +3047,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 179268372}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3972,7 +3958,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 217188881}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4004,7 +3990,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 218688178}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5596,7 +5582,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 275952747}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6487,7 +6473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 321717584}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7891,7 +7877,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 375166934}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10914,7 +10900,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 476573565}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11177,7 +11163,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 498149005}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11997,7 +11983,7 @@ Transform:
   m_LocalScale: {x: 1.8114, y: 1.8114, z: 1.8114}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &537319512
 NavMeshObstacle:
@@ -12903,7 +12889,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 585143257}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12935,7 +12921,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 586683651}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13178,7 +13164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 592527308}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13364,7 +13350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 613646320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13939,7 +13925,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 632373900}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14793,7 +14779,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 664421191}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14955,7 +14941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 672963081}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16250,7 +16236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 723133568}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17574,7 +17560,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 784127722}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17683,7 +17669,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 790778880}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18577,7 +18563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 821130350}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18609,7 +18595,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 825544776}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20830,7 +20816,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 890407981}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21208,7 +21194,7 @@ Transform:
   - {fileID: 206034544}
   - {fileID: 826574825}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &902232775
 GameObject:
@@ -21219,7 +21205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 902232776}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21616,7 +21602,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 916528170}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22066,7 +22052,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 936845182}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22329,7 +22315,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 953035167}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22778,7 +22764,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 978877139}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22810,7 +22796,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 980130940}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22842,7 +22828,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 980158726}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24016,7 +24002,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1036007054}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24773,7 +24759,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1080282114}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26685,7 +26671,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1153235601}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27700,7 +27686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1198051866}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29784,7 +29770,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1283959640}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29816,7 +29802,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1287549615}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30083,7 +30069,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1294743926}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30269,7 +30255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1308287338}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30641,7 +30627,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1319734835}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31322,6 +31308,9 @@ MonoBehaviour:
   layermask:
     serializedVersion: 2
     m_Bits: 1536
+  towerLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   previewBox: {fileID: 68972047}
   canPlaceTower: 1
   uiController: {fileID: 881553846}
@@ -31335,7 +31324,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 12.008208, y: 28.772224, z: -11.700432}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 68972051}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -32457,7 +32447,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1381717539}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33396,7 +33386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1415037863}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34048,7 +34038,7 @@ Transform:
   m_Children:
   - {fileID: 645204674}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1462739295
 GameObject:
@@ -34687,7 +34677,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1484851704}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34925,7 +34915,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1495694912}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35739,7 +35729,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1507101158}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37093,7 +37083,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1561151732}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37485,7 +37475,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1574202679}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37878,7 +37868,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1584695177}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38646,7 +38636,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1631435011}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39969,7 +39959,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1697705814}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40990,7 +40980,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1752334973}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41022,7 +41012,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1755480204}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41957,7 +41947,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1775137849}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41989,7 +41979,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1777232112}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42336,7 +42326,7 @@ Transform:
   m_LocalScale: {x: 5.7811756, y: 2.5069098, z: 5.3424754}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1785268099
 GameObject:
@@ -42399,7 +42389,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1790631229}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42714,7 +42704,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1810838264}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44181,7 +44171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1922679041}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45587,7 +45577,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1993479436}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46295,7 +46285,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2018655098}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47996,7 +47986,7 @@ Transform:
   - {fileID: 352191336}
   - {fileID: 1187025428}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2081875365
 GameObject:
@@ -48521,7 +48511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2118894516}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48946,7 +48936,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2128556873}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49033,7 +49023,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2130122372
 GameObject:
@@ -49576,5 +49566,10 @@ PrefabInstance:
       propertyPath: objectPooler
       value: 
       objectReference: {fileID: 352191335}
+    - target: {fileID: 4408852841720201606, guid: f580b38026aef2f4e86f6cf0701c23ef,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f580b38026aef2f4e86f6cf0701c23ef, type: 3}

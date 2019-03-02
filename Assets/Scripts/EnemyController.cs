@@ -17,16 +17,17 @@ public class EnemyController : MonoBehaviour
     NavMeshPath moveToPath;
     PlayerLifeManager plManager;
     Collider[] targets;
+    float startHealth;
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         moveToPath = new NavMeshPath();
         plManager = GameObject.Find("Game Manager").GetComponent<PlayerLifeManager>();
         agent.speed = movementSpeed;
-
+        startHealth = health;
     }
 
     // Update is called once per frame
@@ -38,6 +39,7 @@ public class EnemyController : MonoBehaviour
         }
 
         NavMesh.CalculatePath(transform.position, destination.position, agent.areaMask, moveToPath);
+
         if (gameObject.activeInHierarchy)
         {
             StartCoroutine(MoveEnemy());
@@ -63,6 +65,11 @@ public class EnemyController : MonoBehaviour
             gameObject.SetActive(false);
             plManager.DecrementLife();
         }
+    }
+
+    private void OnEnable()
+    {
+        health = startHealth;
     }
 
     private void LookForTower()
@@ -94,7 +101,6 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator MoveEnemy()
     {
-
         agent.SetPath(moveToPath);
         yield return null;
     }

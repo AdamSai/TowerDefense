@@ -10,7 +10,6 @@ public class GetSize : MonoBehaviour
     {
         renderer = GetComponent<Renderer>();
         print(renderer.bounds.size);
-
     }
 
     // Update is called once per frame

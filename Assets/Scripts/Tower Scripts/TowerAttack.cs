@@ -8,10 +8,9 @@ public partial class TowerAttack : MonoBehaviour
     public float attackDamage = 10f;
     [Tooltip("If this is selected, the attack damage will arrive instantly at the selected target")] public bool instantAttack = false;
     public float attackCooldown = 1f;
-
     public ObjectPooler objectPooler;
-    private bool canAttack = true;
 
+    private bool canAttack = true;
     private Collider selectedTarget;
 
     // Update is called once per frame

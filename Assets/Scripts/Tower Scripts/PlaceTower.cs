@@ -24,7 +24,7 @@ public class PlaceTower : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(buildNavMesh());
+        StartCoroutine(BuildNavMesh());
         _previewBoxRenderer = previewBox.GetComponent<Renderer>();
         _newPos = previewBox.transform.position;
         _newX = _newPos.x;
@@ -40,28 +40,20 @@ public class PlaceTower : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, layermask))
         {
-
             var newPos = CalculateNewPosition(hit);
 
             if (objectPooler != null)
             {
                 CheckForCollisions();
-
                 previewBox.transform.position = newPos;
                 previewBox.SetActive(true);
-
             }
 
             if (uiController.ShowingBuildUI)
-            {
                 targetInfoUI.parent.SetActive(false);
 
-            }
-
             else
-            {
                 previewBox.SetActive(false);
-            }
 
             if (Input.GetButtonDown("Fire1"))
             {
@@ -70,8 +62,7 @@ public class PlaceTower : MonoBehaviour
                     targetInfoUI.parent.SetActive(false);
                     selectedObject = null;
                     CreateTower(newPos);
-                    StartCoroutine(buildNavMesh());
-
+                    StartCoroutine(BuildNavMesh());
                 }
                 else if (hit.transform.tag == "Tower" && !uiController.ShowingBuildUI)
                 {
@@ -81,10 +72,6 @@ public class PlaceTower : MonoBehaviour
                 }
             }
         }
-
-
-
-
     }
 
     private void CheckForCollisions()
@@ -124,19 +111,18 @@ public class PlaceTower : MonoBehaviour
             return;
         box.transform.position = newPos;
         box.SetActive(true);
-
-
     }
 
     public void DeleteTower(Collider coll)
     {
-        buildNavMesh();
+        BuildNavMesh();
         coll.gameObject.SetActive(false);
     }
 
 
-    IEnumerator buildNavMesh()
+    IEnumerator BuildNavMesh()
     {
+        surface.RemoveData();
         surface.BuildNavMesh();
         yield return null;
     }
@@ -144,13 +130,5 @@ public class PlaceTower : MonoBehaviour
     public void SetObjectPooler(ObjectPooler newPooler)
     {
         objectPooler = newPooler;
-    }
-    private void OnDrawGizmos()
-    {
-        if (Debug.isDebugBuild)
-        {
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawSphere(previewBox.transform.position, .5f);
-        }
     }
 }

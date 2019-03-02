@@ -20,14 +20,13 @@ public class TargetFinder : MonoBehaviour
     }
     void FixedUpdate()
     {
-
         targets = Physics.OverlapSphere(transform.position, range, attackLayer, QueryTriggerInteraction.Ignore);
 
         if (targets.Length > 0 && searching)
             StartCoroutine(SelectTarget());
-        if(targets.Length == 0)
-            SelectedTarget = null;
 
+        if (targets.Length == 0)
+            SelectedTarget = null;
 
         if (SelectedTarget != null)
         {
@@ -50,7 +49,7 @@ public class TargetFinder : MonoBehaviour
     {
         while (searching)
         {
-                SelectedTarget = targets[0];
+            SelectedTarget = targets[0];
             for (int i = 0; i < targets.Length; i++)
             {
                 var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
@@ -60,7 +59,7 @@ public class TargetFinder : MonoBehaviour
                 {
                     SelectedTarget = targets[i];
                 }
-                if(i >= targets.Length - 1)
+                if (i >= targets.Length - 1)
                 {
                     searching = false;
                 }
@@ -69,18 +68,6 @@ public class TargetFinder : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         searching = true;
     }
-
-
-
-    private void OnDrawGizmos()
-    {
-        //if (Debug.isDebugBuild)
-        //{
-        //    Gizmos.color = new Color(0, 50, 0, .05f);
-        //    Gizmos.DrawSphere(transform.position, range);
-        //}
-    }
-
 }
 
 

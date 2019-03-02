@@ -8,18 +8,11 @@ public class FollowTarget : MonoBehaviour
     public float projectileHitRange = 1f;
     public float damage = 10f;
     private Collider followTarget;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (followTarget)
         {
-
             if ((transform.position - followTarget.transform.position).sqrMagnitude > projectileHitRange)
             {
                 transform.position += (followTarget.transform.position - transform.position).normalized * projectileSpeed * Time.deltaTime;

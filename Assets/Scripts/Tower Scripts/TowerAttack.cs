@@ -10,13 +10,13 @@ public partial class TowerAttack : MonoBehaviour
     public float attackCooldown = 1f;
     public ObjectPooler objectPooler;
 
-    private bool canAttack = true;
-    private Collider selectedTarget;
+    bool _canAttack = true;
+    Collider _selectedTarget;
 
     // Update is called once per frame
     void Update()
     {
-        if (canAttack)
+        if (_canAttack)
         {
             Attack();
         }
@@ -25,24 +25,24 @@ public partial class TowerAttack : MonoBehaviour
 
     void Attack()
     {
-        canAttack = false;
-        selectedTarget = GetComponent<TargetFinder>().SelectedTarget;
+        _canAttack = false;
+        _selectedTarget = GetComponent<TargetFinder>().SelectedTarget;
         StartCoroutine(SetCanAttack());
 
-        if (!instantAttack && selectedTarget != null)
+        if (!instantAttack && _selectedTarget != null)
         {
             var projectile = objectPooler.GetPooledObject(); //  Instantiate(projectile, transform.position, Quaternion.identity);
             if (projectile == null)
             {
                 return;
             }
-            if (selectedTarget.gameObject.activeInHierarchy)
+            if (_selectedTarget.gameObject.activeInHierarchy)
             {
 
                 var followScript = projectile.GetComponent<FollowTarget>();
                 followScript.SetDamage(attackDamage);
                 projectile.transform.position = transform.position;
-                followScript.SetTarget(selectedTarget);
+                followScript.SetTarget(_selectedTarget);
                 projectile.SetActive(true);
             }
         }
@@ -52,11 +52,11 @@ public partial class TowerAttack : MonoBehaviour
     IEnumerator SetCanAttack()
     {
         yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
+        _canAttack = true;
     }
 
     private void OnEnable()
     {
-        canAttack = true;
+        _canAttack = true;
     }
 }

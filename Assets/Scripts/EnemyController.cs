@@ -12,22 +12,23 @@ public class EnemyController : MonoBehaviour
     public float health = 1000f;
     public float timeToDestroyIfNoPath = 2f;
     public LayerMask TowerLayer;
-    float DestroyTowerTimer;
-    NavMeshAgent agent;
-    NavMeshPath moveToPath;
-    PlayerLifeManager plManager;
-    Collider[] targets;
-    float startHealth;
+
+    float _DestroyTowerTimer;
+    NavMeshAgent _agent;
+    NavMeshPath _moveToPath;
+    PlayerLifeManager _plManager;
+    Collider[] _targets;
+    float _startHealth;
 
 
     // Start is called before the first frame update
     void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        moveToPath = new NavMeshPath();
-        plManager = GameObject.Find("Game Manager").GetComponent<PlayerLifeManager>();
-        agent.speed = movementSpeed;
-        startHealth = health;
+        _agent = GetComponent<NavMeshAgent>();
+        _moveToPath = new NavMeshPath();
+        _plManager = GameObject.Find("Game Manager").GetComponent<PlayerLifeManager>();
+        _agent.speed = movementSpeed;
+        _startHealth = health;
     }
 
     // Update is called once per frame
@@ -38,58 +39,58 @@ public class EnemyController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        NavMesh.CalculatePath(transform.position, destination.position, agent.areaMask, moveToPath);
 
         if (gameObject.activeInHierarchy)
         {
+            NavMesh.CalculatePath(transform.position, destination.position, _agent.areaMask, _moveToPath);
             StartCoroutine(MoveEnemy());
         }
 
-        if (DestroyTowerTimer >= timeToDestroyIfNoPath)
+        if (_DestroyTowerTimer >= timeToDestroyIfNoPath)
         {
             LookForTower();
         }
 
-        if (agent.pathStatus != NavMeshPathStatus.PathComplete)
+        if (_agent.pathStatus != NavMeshPathStatus.PathComplete)
         {
-            DestroyTowerTimer += Time.deltaTime;
+            _DestroyTowerTimer += Time.deltaTime;
         }
         else
         {
-            DestroyTowerTimer = 0;
+            _DestroyTowerTimer = 0;
         }
 
 
         if ((transform.position - destination.position).sqrMagnitude < 0.1f)
         {
             gameObject.SetActive(false);
-            plManager.DecrementLife();
+            _plManager.DecrementLife();
         }
     }
 
     private void OnEnable()
     {
-        health = startHealth;
+        health = _startHealth;
     }
 
     private void LookForTower()
     {
         Collider ClosestTarget = null;
-        targets = Physics.OverlapSphere(transform.position, 2f, TowerLayer, QueryTriggerInteraction.Collide);
+        _targets = Physics.OverlapSphere(transform.position, 2f, TowerLayer, QueryTriggerInteraction.Collide);
 
-        for (int i = 0; i < targets.Length; i++)
+        for (int i = 0; i < _targets.Length; i++)
         {
             if (ClosestTarget == null)
             {
-                ClosestTarget = targets[0];
+                ClosestTarget = _targets[0];
             }
-            if ((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude < (targets[i].transform.position - destination.transform.position).sqrMagnitude)
+            if ((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude < (_targets[i].transform.position - destination.transform.position).sqrMagnitude)
             {
-                ClosestTarget = targets[i];
+                ClosestTarget = _targets[i];
             }
         }
 
-        if (targets.Length > 0)
+        if (_targets.Length > 0)
             DestroyClosestTarget(ClosestTarget);
 
     }
@@ -101,7 +102,7 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator MoveEnemy()
     {
-        agent.SetPath(moveToPath);
+        _agent.SetPath(_moveToPath);
         yield return null;
     }
 

@@ -7,19 +7,19 @@ public class FollowTarget : MonoBehaviour
     public float projectileSpeed = 10f;
     public float projectileHitRange = 1f;
     public float damage = 10f;
-    private Collider followTarget;
+    Collider _followTarget;
 
     void Update()
     {
-        if (followTarget)
+        if (_followTarget)
         {
-            if ((transform.position - followTarget.transform.position).sqrMagnitude > projectileHitRange)
+            if ((transform.position - _followTarget.transform.position).sqrMagnitude > projectileHitRange)
             {
-                transform.position += (followTarget.transform.position - transform.position).normalized * projectileSpeed * Time.deltaTime;
+                transform.position += (_followTarget.transform.position - transform.position).normalized * projectileSpeed * Time.deltaTime;
             }
             else
             {
-                followTarget.GetComponent<EnemyController>().health -= damage;
+                _followTarget.GetComponent<EnemyController>().health -= damage;
                 gameObject.SetActive(false);
 
             }
@@ -28,7 +28,7 @@ public class FollowTarget : MonoBehaviour
 
     public void SetTarget(Collider target)
     {
-        followTarget = target;
+        _followTarget = target;
     }
 
     public void SetDamage(float damage)

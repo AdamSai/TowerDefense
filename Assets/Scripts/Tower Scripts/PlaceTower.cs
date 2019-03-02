@@ -12,13 +12,13 @@ public class PlaceTower : MonoBehaviour
     private ObjectPooler objectPooler;
     public bool canPlaceTower = true;
     public UIController uiController;
-    private Renderer _previewBoxRenderer;
-    private Vector3 _newPos;
-    private GameObject selectedObject;
-    private float _newX;
-    private float _newZ;
-    private TargetToUI targetInfoUI;
-    Collider[] targets;
+
+    Renderer _previewBoxRenderer;
+    Vector3 _newPos;
+    GameObject selectedObject;
+    float _newX;
+    float _newZ;
+    TargetToUI _targetInfoUI;
 
 
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class PlaceTower : MonoBehaviour
         _newPos = previewBox.transform.position;
         _newX = _newPos.x;
         _newZ = _newPos.z;
-        targetInfoUI = GameObject.Find("Game Manager").GetComponent<TargetToUI>();
+        _targetInfoUI = GameObject.Find("Game Manager").GetComponent<TargetToUI>();
 
     }
 
@@ -50,7 +50,7 @@ public class PlaceTower : MonoBehaviour
             }
 
             if (uiController.ShowingBuildUI)
-                targetInfoUI.parent.SetActive(false);
+                _targetInfoUI.parent.SetActive(false);
 
             else
                 previewBox.SetActive(false);
@@ -59,7 +59,7 @@ public class PlaceTower : MonoBehaviour
             {
                 if (canPlaceTower && objectPooler != null && uiController.ShowingBuildUI)
                 {
-                    targetInfoUI.parent.SetActive(false);
+                    _targetInfoUI.parent.SetActive(false);
                     selectedObject = null;
                     CreateTower(newPos);
                     StartCoroutine(BuildNavMesh());
@@ -67,8 +67,8 @@ public class PlaceTower : MonoBehaviour
                 else if (hit.transform.tag == "Tower" && !uiController.ShowingBuildUI)
                 {
                     selectedObject = hit.transform.gameObject;
-                    targetInfoUI.SetSelectedTower(selectedObject);
-                    targetInfoUI.parent.SetActive(true);
+                    _targetInfoUI.SetSelectedTower(selectedObject);
+                    _targetInfoUI.parent.SetActive(true);
                 }
             }
         }

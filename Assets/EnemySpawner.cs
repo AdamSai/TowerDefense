@@ -11,13 +11,7 @@ public class EnemySpawner : MonoBehaviour
     public int XDistance = 1;
     public int ZDistance = 1;
     public bool ReverseSpawnDirection = false;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.S))
@@ -25,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
 
     }
 
-    void SpawnEnemies()
+    public void SpawnEnemies()
     {
         float newX;
         float newZ;
@@ -45,11 +39,10 @@ public class EnemySpawner : MonoBehaviour
                     newZ = SpawnPoint.transform.position.z - (z + zOffset);
                 }
 
-                GameObject enemy = objectPooler.GetPooledObject();
-                
+                GameObject enemy = objectPooler.GetPooledObject();                                                       //minus with 0.01 so the enemy hits the ground & navmeshagent will work
                 enemy.transform.position = new Vector3(newX, SpawnPoint.transform.position.y + enemy.transform.localScale.y - 0.01f, newZ);
-                zOffset += ZDistance;
                 enemy.SetActive(true);
+                zOffset += ZDistance;
             }
         }
     }

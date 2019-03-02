@@ -9,21 +9,20 @@ public class EnemyController : MonoBehaviour
 
     public Transform destination;
     public float movementSpeed;
+    public float health = 1000f;
     public float timeToDestroyIfNoPath = 2f;
     public LayerMask TowerLayer;
-    bool shouldMove = false;
     float DestroyTowerTimer;
     NavMeshAgent agent;
     NavMeshPath moveToPath;
     PlayerLifeManager plManager;
     Collider[] targets;
-    
+
 
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        shouldMove = true;
         moveToPath = new NavMeshPath();
         plManager = GameObject.Find("Game Manager").GetComponent<PlayerLifeManager>();
         agent.speed = movementSpeed;
@@ -33,10 +32,18 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        NavMesh.CalculatePath(transform.position, destination.position, agent.areaMask, moveToPath);
-        StartCoroutine(MoveEnemy());
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+        }
 
-        if(DestroyTowerTimer >= timeToDestroyIfNoPath)
+        NavMesh.CalculatePath(transform.position, destination.position, agent.areaMask, moveToPath);
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(MoveEnemy());
+        }
+
+        if (DestroyTowerTimer >= timeToDestroyIfNoPath)
         {
             LookForTower();
         }
@@ -51,7 +58,7 @@ public class EnemyController : MonoBehaviour
         }
 
 
-        if((transform.position - destination.position).sqrMagnitude < 0.1f)
+        if ((transform.position - destination.position).sqrMagnitude < 0.1f)
         {
             gameObject.SetActive(false);
             plManager.DecrementLife();
@@ -63,19 +70,19 @@ public class EnemyController : MonoBehaviour
         Collider ClosestTarget = null;
         targets = Physics.OverlapSphere(transform.position, 2f, TowerLayer, QueryTriggerInteraction.Collide);
 
-        for(int i = 0; i < targets.Length; i++)
+        for (int i = 0; i < targets.Length; i++)
         {
             if (ClosestTarget == null)
             {
                 ClosestTarget = targets[0];
             }
-            if((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude < (targets[i].transform.position - destination.transform.position).sqrMagnitude)
+            if ((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude < (targets[i].transform.position - destination.transform.position).sqrMagnitude)
             {
                 ClosestTarget = targets[i];
             }
         }
 
-        if(targets.Length > 0)
+        if (targets.Length > 0)
             DestroyClosestTarget(ClosestTarget);
 
     }
@@ -87,8 +94,9 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator MoveEnemy()
     {
-            agent.SetPath(moveToPath);
-            yield return null;
+
+        agent.SetPath(moveToPath);
+        yield return null;
     }
 
 

@@ -17,7 +17,6 @@ public class PlaceTower : MonoBehaviour
     private GameObject selectedObject;
     private float _newX;
     private float _newZ;
-    private float doubleClickTimer = 0;
     private TargetToUI targetInfoUI;
     Collider[] targets;
 

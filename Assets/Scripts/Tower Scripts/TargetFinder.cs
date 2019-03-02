@@ -11,9 +11,11 @@ public class TargetFinder : MonoBehaviour
     public Collider SelectedTarget { get; private set; }
     private Collider[] targets;
     private Transform towerMesh;
+    bool searching = true;
 
     private void Start()
     {
+        searching = true;
         towerMesh = transform.GetChild(0).GetChild(1);
     }
     void FixedUpdate()
@@ -21,9 +23,9 @@ public class TargetFinder : MonoBehaviour
 
         targets = Physics.OverlapSphere(transform.position, range, attackLayer, QueryTriggerInteraction.Ignore);
 
-        if (targets.Length != 0)
-            SelectedTarget = SelectTarget(targets);
-        else
+        if (targets.Length > 0 && searching)
+            StartCoroutine(SelectTarget());
+        else if(targets.Length == 0)
             SelectedTarget = null;
 
 
@@ -34,7 +36,7 @@ public class TargetFinder : MonoBehaviour
             var rotation = Quaternion.LookRotation(lookPos);
 
             towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
-            
+
             if (Vector3.Distance(SelectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)
             {
 
@@ -44,28 +46,29 @@ public class TargetFinder : MonoBehaviour
     }
 
 
-    private Collider SelectTarget(Collider[] targets)
+    private IEnumerator SelectTarget()
     {
-        var CurTarget = targets[0];
-        
-
-        for (int i = 0;  i < targets.Length; i++)
+        while (searching)
         {
-            var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
-            var selectedTargetPos = Vector3.Distance(CurTarget.transform.position, transform.position);
-
-            if (attackClosestTarget && newTargetPos < selectedTargetPos)
+            if(targets.Length > 0)
+                SelectedTarget = targets[0];
+            for (int i = 0; i < targets.Length; i++)
             {
-                CurTarget = targets[i];
-            }
-   
-            //else if (selectedTargetPos < range)
-            //{
-            //    return CurTarget;
-            //}
-        }
+                var newTargetPos = Vector3.Distance(targets[i].transform.position, transform.position);
+                var selectedTargetPos = Vector3.Distance(SelectedTarget.transform.position, transform.position);
 
-        return CurTarget;
+                if (attackClosestTarget && newTargetPos < selectedTargetPos)
+                {
+                    SelectedTarget = targets[i];
+                }
+                if(i >= targets.Length - 1)
+                {
+                    searching = false;
+                }
+            }
+        }
+        yield return new WaitForSeconds(1);
+        searching = true;
     }
 
 

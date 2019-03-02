@@ -6,6 +6,7 @@ public class FollowTarget : MonoBehaviour
 {
     public float projectileSpeed = 10f;
     public float projectileHitRange = 1f;
+    public float damage = 10f;
     private Collider followTarget;
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,7 @@ public class FollowTarget : MonoBehaviour
             }
             else
             {
+                followTarget.GetComponent<EnemyController>().health -= damage;
                 gameObject.SetActive(false);
 
             }
@@ -36,6 +38,10 @@ public class FollowTarget : MonoBehaviour
         followTarget = target;
     }
 
+    public void SetDamage(float damage)
+    {
+        this.damage = damage;
+    }
 
 
 

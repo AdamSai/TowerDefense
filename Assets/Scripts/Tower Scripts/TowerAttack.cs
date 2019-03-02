@@ -39,6 +39,7 @@ public partial class TowerAttack : MonoBehaviour
             }
 
             var followScript = projectile.GetComponent<FollowTarget>();
+            followScript.SetDamage(attackDamage);
             projectile.transform.position = transform.position;
             followScript.SetTarget(selectedTarget);
             projectile.SetActive(true);

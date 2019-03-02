@@ -35,14 +35,17 @@ public partial class TowerAttack : MonoBehaviour
             var projectile = objectPooler.GetPooledObject(); //  Instantiate(projectile, transform.position, Quaternion.identity);
             if (projectile == null)
             {
-                return; 
+                return;
             }
+            if (selectedTarget.gameObject.activeInHierarchy)
+            {
 
-            var followScript = projectile.GetComponent<FollowTarget>();
-            followScript.SetDamage(attackDamage);
-            projectile.transform.position = transform.position;
-            followScript.SetTarget(selectedTarget);
-            projectile.SetActive(true);
+                var followScript = projectile.GetComponent<FollowTarget>();
+                followScript.SetDamage(attackDamage);
+                projectile.transform.position = transform.position;
+                followScript.SetTarget(selectedTarget);
+                projectile.SetActive(true);
+            }
         }
 
     }

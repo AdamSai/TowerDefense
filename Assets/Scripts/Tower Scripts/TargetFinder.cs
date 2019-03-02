@@ -25,7 +25,7 @@ public class TargetFinder : MonoBehaviour
 
         if (targets.Length > 0 && searching)
             StartCoroutine(SelectTarget());
-        else if(targets.Length == 0)
+        if(targets.Length == 0)
             SelectedTarget = null;
 
 
@@ -50,7 +50,6 @@ public class TargetFinder : MonoBehaviour
     {
         while (searching)
         {
-            if(targets.Length > 0)
                 SelectedTarget = targets[0];
             for (int i = 0; i < targets.Length; i++)
             {
@@ -67,7 +66,7 @@ public class TargetFinder : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(.5f);
         searching = true;
     }
 

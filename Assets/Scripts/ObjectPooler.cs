@@ -12,11 +12,6 @@ public class ObjectPooler : MonoBehaviour
 
     List<GameObject> pooledObjects;
 
-    private void Awake()
-    {
-        //    current = this;
-    }
-    // Start is called before the first frame update
     void Start()
     {
         pooledObjects = new List<GameObject>();

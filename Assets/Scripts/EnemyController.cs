@@ -13,22 +13,28 @@ public class EnemyController : MonoBehaviour
     public float timeToDestroyIfNoPath = 2f;
     public LayerMask TowerLayer;
 
+    GoldManager _gold;
     float _DestroyTowerTimer;
     NavMeshAgent _agent;
     NavMeshPath _moveToPath;
     PlayerLifeManager _plManager;
     Collider[] _targets;
+    GameObject _gameManager;
     float _startHealth;
+    RoundManager _roundManager;
 
 
     // Start is called before the first frame update
     void Awake()
     {
+        _gameManager = GameObject.Find("Game Manager");
         _agent = GetComponent<NavMeshAgent>();
         _moveToPath = new NavMeshPath();
-        _plManager = GameObject.Find("Game Manager").GetComponent<PlayerLifeManager>();
+        _plManager = _gameManager.GetComponent<PlayerLifeManager>();
         _agent.speed = movementSpeed;
         _startHealth = health;
+        _gold = _gameManager.GetComponent<GoldManager>();
+        _roundManager = _gameManager.GetComponent<RoundManager>();
     }
 
     // Update is called once per frame
@@ -36,6 +42,19 @@ public class EnemyController : MonoBehaviour
     {
         if (health <= 0)
         {
+            int rand;
+            var curRound = _roundManager._currentRound;
+            if(curRound < 5)
+                rand = UnityEngine.Random.Range(1, 4);
+            else if(curRound < 10)
+                rand = UnityEngine.Random.Range(3, 7);
+            else if(curRound < 15)
+                rand = UnityEngine.Random.Range(6, 10);
+            else
+                rand = UnityEngine.Random.Range(10, 20);
+
+            print($"dropped {rand} gold");
+            _gold.AddGold(rand);
             gameObject.SetActive(false);
         }
 
@@ -59,7 +78,6 @@ public class EnemyController : MonoBehaviour
         {
             _DestroyTowerTimer = 0;
         }
-
 
         if ((transform.position - destination.position).sqrMagnitude < 0.1f)
         {

@@ -13,24 +13,28 @@ public class PlaceTower : MonoBehaviour
     public bool canPlaceTower = true;
     public UIController uiController;
 
+
+    GoldManager _gold;
     Renderer _previewBoxRenderer;
     Vector3 _newPos;
     GameObject selectedObject;
     float _newX;
     float _newZ;
     TargetToUI _targetInfoUI;
+    GameObject _gameManager;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(BuildNavMesh());
+        _gameManager = GameObject.Find("Game Manager");
+        _gold = _gameManager.GetComponent<GoldManager>();
+        _targetInfoUI = _gameManager.GetComponent<TargetToUI>();
         _previewBoxRenderer = previewBox.GetComponent<Renderer>();
         _newPos = previewBox.transform.position;
         _newX = _newPos.x;
         _newZ = _newPos.z;
-        _targetInfoUI = GameObject.Find("Game Manager").GetComponent<TargetToUI>();
-
+        StartCoroutine(BuildNavMesh());
     }
 
     // Update is called once per frame
@@ -107,10 +111,18 @@ public class PlaceTower : MonoBehaviour
     private void CreateTower(Vector3 newPos)
     {
         var box = objectPooler.GetPooledObject();
-        if (box == null)
-            return;
-        box.transform.position = newPos;
-        box.SetActive(true);
+        var cost = box.GetComponent<TowerAttack>().cost;
+        if (_gold.Gold >= cost)
+        {
+            if (box == null)
+                return;
+            _gold.RemoveGold(cost);
+            box.transform.position = newPos;
+            box.SetActive(true);
+        } else
+        {
+            StartCoroutine(_gold.DisplayErrorText());
+        }
     }
 
     public void DeleteTower(Collider coll)
@@ -118,7 +130,6 @@ public class PlaceTower : MonoBehaviour
         BuildNavMesh();
         coll.gameObject.SetActive(false);
     }
-
 
     IEnumerator BuildNavMesh()
     {

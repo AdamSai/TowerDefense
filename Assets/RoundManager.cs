@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class RoundManager : MonoBehaviour
 {
     public int AmountOfRounds = 10;
     public float EndOfRoundTime = 30f;
     public Transform enemyContainer;
-
     public int _currentRound { get; private set; } = 1;
+    public TextMeshProUGUI roundText;
+    public TextMeshProUGUI timerText;
     float _endOfRoundTracker = 0f;
     bool _isEndOfRound = true;
     Transform[] _enemies;
@@ -22,6 +24,7 @@ public class RoundManager : MonoBehaviour
     void Start()
     {
         _isEndOfRound = true;
+        roundText.text = $"Round: 0{_currentRound}";
     }
 
     // Update is called once per frame
@@ -30,11 +33,14 @@ public class RoundManager : MonoBehaviour
         _enemies = enemyContainer.GetComponentsInChildren<Transform>(false);
         if (_isEndOfRound)
         {
+            timerText.text = $"Round starting: {(EndOfRoundTime - _endOfRoundTracker).ToString("F2")}";
             _endOfRoundTracker += Time.deltaTime;
 
-        } if(_endOfRoundTracker >= EndOfRoundTime)
+        }
+        if (_endOfRoundTracker >= EndOfRoundTime)
         {
             StartCoroutine(StartRound());
+            timerText.text = "";
         }
     }
 
@@ -42,13 +48,13 @@ public class RoundManager : MonoBehaviour
     IEnumerator StartRound()
     {
         _enemySpawner.SpawnEnemies();
-        _endOfRoundTracker = 0;
         _isEndOfRound = false;
+        _endOfRoundTracker = 0;
         yield return new WaitForSeconds(2);
         yield return new WaitUntil(() => _enemies.Length == 1);
         _currentRound++;
         _isEndOfRound = true;
-
+        roundText.text = $"Round: {((_currentRound < 10)? $"0{_currentRound}" : _currentRound.ToString())}";
 
     }
 }

@@ -9,6 +9,7 @@ public partial class TowerAttack : MonoBehaviour
     [Tooltip("If this is selected, the attack damage will arrive instantly at the selected target")] public bool instantAttack = false;
     public float attackCooldown = 1f;
     public ObjectPooler objectPooler;
+    public int cost = 10;
 
     bool _canAttack = true;
     Collider _selectedTarget;
@@ -38,7 +39,6 @@ public partial class TowerAttack : MonoBehaviour
             }
             if (_selectedTarget.gameObject.activeInHierarchy)
             {
-
                 var followScript = projectile.GetComponent<FollowTarget>();
                 followScript.SetDamage(attackDamage);
                 projectile.transform.position = transform.position;

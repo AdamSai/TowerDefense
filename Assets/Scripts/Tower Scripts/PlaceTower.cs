@@ -6,8 +6,8 @@ using UnityEngine.AI;
 public class PlaceTower : MonoBehaviour
 {
     public NavMeshSurface surface;
-    public LayerMask layermask;
-    public LayerMask towerLayer;
+    public LayerMask raycastLayer; //Layers that the initial raycast will hit
+    public LayerMask blockingLayer; //Layers that blocks placement of towers
     public GameObject previewBox;
     private ObjectPooler objectPooler;
     public bool canPlaceTower = true;
@@ -42,7 +42,7 @@ public class PlaceTower : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, layermask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, raycastLayer))
         {
             var newPos = CalculateNewPosition(hit);
 
@@ -81,17 +81,19 @@ public class PlaceTower : MonoBehaviour
     private void CheckForCollisions()
     {
         var RaycastPoint = new Vector3(previewBox.transform.position.x, previewBox.transform.position.y + 2, previewBox.transform.position.z);
-        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, towerLayer, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, blockingLayer, QueryTriggerInteraction.Ignore))
         {
-            if (hit2.transform.gameObject.tag == "Tower")
+            var hitTag = hit2.transform.gameObject.tag;
+            print(hitTag);
+            if (hitTag == "Tower" || hitTag == "Restricted" || hitTag == "Target")
             {
-                previewBox.GetComponent<Renderer>().material.color = new Color(140, 0, 0, 0f);
+                previewBox.GetComponent<Renderer>().material.color = new Color(140, 0, 0, .5f);
                 canPlaceTower = false;
             }
         }
         else
         {
-            previewBox.GetComponent<Renderer>().material.color = new Color(0, 140, 0, 0f);
+            previewBox.GetComponent<Renderer>().material.color = new Color(0, 140, 0, .5f);
             canPlaceTower = true;
         }
     }
@@ -125,10 +127,14 @@ public class PlaceTower : MonoBehaviour
         }
     }
 
-    public void DeleteTower(Collider coll)
+    public void SellTower()
     {
         BuildNavMesh();
-        coll.gameObject.SetActive(false);
+
+        var cost = selectedObject.GetComponent<TowerAttack>().cost;
+        _gold.AddGold(cost / 3);
+        selectedObject.gameObject.SetActive(false);
+        _targetInfoUI.parent.SetActive(false);
     }
 
     IEnumerator BuildNavMesh()

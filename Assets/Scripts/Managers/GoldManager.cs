@@ -10,20 +10,20 @@ public class GoldManager : MonoBehaviour
 
     private void Start()
     {
-        GoldText.text = $"Gold: {((Gold < 10) ? 0 + Gold.ToString() : Gold.ToString())}";
+        GoldText.text = $"Gold: <color=yellow>{((Gold < 10) ? 0 + Gold.ToString() : Gold.ToString())}</color>";
         ErrorText.text = "";
     }
 
     public void AddGold(int amount)
     {
         Gold += amount;
-        GoldText.text = $"Gold: {Gold}";
+        GoldText.text = $"Gold: <color=yellow>{Gold}</color>";
     }
 
     public void RemoveGold(int amount)
     {
         Gold -= amount;
-        GoldText.text = $"Gold: {Gold}";
+        GoldText.text = $"Gold: <color=yellow>{Gold}</color>";
     }
 
     public IEnumerator DisplayErrorText()

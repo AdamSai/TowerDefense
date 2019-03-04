@@ -7,11 +7,13 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
 
+    public string enemyName = "Enemy";
     public Transform destination;
     public float movementSpeed;
     public float health = 1000f;
     public float timeToDestroyIfNoPath = 2f;
     public LayerMask TowerLayer;
+    public float _maxHealth { get; private set; }
 
     GoldManager _gold;
     float _DestroyTowerTimer;
@@ -20,9 +22,8 @@ public class EnemyController : MonoBehaviour
     PlayerLifeManager _plManager;
     Collider[] _targets;
     GameObject _gameManager;
-    float _startHealth;
     RoundManager _roundManager;
-
+    int _curRound;
 
     // Start is called before the first frame update
     void Awake()
@@ -32,7 +33,7 @@ public class EnemyController : MonoBehaviour
         _moveToPath = new NavMeshPath();
         _plManager = _gameManager.GetComponent<PlayerLifeManager>();
         _agent.speed = movementSpeed;
-        _startHealth = health;
+        _maxHealth = health;
         _gold = _gameManager.GetComponent<GoldManager>();
         _roundManager = _gameManager.GetComponent<RoundManager>();
     }
@@ -40,20 +41,18 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _curRound = _roundManager._currentRound;
         if (health <= 0)
         {
             int rand;
-            var curRound = _roundManager._currentRound;
-            if(curRound < 5)
+            if(_curRound < 5)
                 rand = UnityEngine.Random.Range(1, 4);
-            else if(curRound < 10)
+            else if(_curRound < 15)
                 rand = UnityEngine.Random.Range(3, 7);
-            else if(curRound < 15)
+            else if(_curRound < 25)
                 rand = UnityEngine.Random.Range(6, 10);
             else
                 rand = UnityEngine.Random.Range(10, 20);
-
-            print($"dropped {rand} gold");
             _gold.AddGold(rand);
             gameObject.SetActive(false);
         }
@@ -78,8 +77,8 @@ public class EnemyController : MonoBehaviour
         {
             _DestroyTowerTimer = 0;
         }
-
-        if ((transform.position - destination.position).sqrMagnitude < 0.1f)
+        var endPos = new Vector3(destination.position.x, transform.position.y, destination.position.z);
+        if ((transform.position - endPos).sqrMagnitude < 0.1f)
         {
             gameObject.SetActive(false);
             _plManager.DecrementLife();
@@ -88,7 +87,9 @@ public class EnemyController : MonoBehaviour
 
     private void OnEnable()
     {
-        health = _startHealth;
+        _maxHealth += _curRound * 13;
+        health = _maxHealth;
+        print("health: " + (_maxHealth + _curRound * 15));
     }
 
     private void LookForTower()

@@ -68,8 +68,9 @@ public class PlaceTower : MonoBehaviour
                     CreateTower(newPos);
                     StartCoroutine(BuildNavMesh());
                 }
-                else if (hit.transform.tag == "Tower" && !uiController.ShowingBuildUI)
+                else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
+                    print(hit.transform.tag);
                     selectedObject = hit.transform.gameObject;
                     _targetInfoUI.SetSelectedTower(selectedObject);
                     _targetInfoUI.parent.SetActive(true);
@@ -84,7 +85,6 @@ public class PlaceTower : MonoBehaviour
         if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, blockingLayer, QueryTriggerInteraction.Ignore))
         {
             var hitTag = hit2.transform.gameObject.tag;
-            print(hitTag);
             if (hitTag == "Tower" || hitTag == "Restricted" || hitTag == "Target")
             {
                 previewBox.GetComponent<Renderer>().material.color = new Color(140, 0, 0, .5f);
@@ -113,7 +113,7 @@ public class PlaceTower : MonoBehaviour
     private void CreateTower(Vector3 newPos)
     {
         var box = objectPooler.GetPooledObject();
-        var cost = box.GetComponent<TowerAttack>().cost;
+        var cost = box.GetComponent<TowerController>().cost;
         if (_gold.Gold >= cost)
         {
             if (box == null)
@@ -131,7 +131,7 @@ public class PlaceTower : MonoBehaviour
     {
         BuildNavMesh();
 
-        var cost = selectedObject.GetComponent<TowerAttack>().cost;
+        var cost = selectedObject.GetComponent<TowerController>().cost;
         _gold.AddGold(cost / 3);
         selectedObject.gameObject.SetActive(false);
         _targetInfoUI.parent.SetActive(false);

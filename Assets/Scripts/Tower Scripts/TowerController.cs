@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 [ExecuteAlways]
-public partial class TowerAttack : MonoBehaviour
+public partial class TowerController : MonoBehaviour
 {
     public string towerName = "Tower";
     public float attackDamage = 10f;

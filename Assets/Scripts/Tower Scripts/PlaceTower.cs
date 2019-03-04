@@ -137,6 +137,19 @@ public class PlaceTower : MonoBehaviour
         _targetInfoUI.parent.SetActive(false);
     }
 
+    public void UpgradeTower()
+    {
+        var tower = selectedObject.GetComponent<TowerController>();
+        if(_gold.Gold >= tower.cost)
+        {
+        _gold.RemoveGold(tower.cost / 3);
+        tower.UpgradeTower();
+        } else
+        {
+            StartCoroutine(_gold.DisplayErrorText());
+        }
+    }
+
     IEnumerator BuildNavMesh()
     {
         surface.RemoveData();

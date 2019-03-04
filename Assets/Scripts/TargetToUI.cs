@@ -8,7 +8,8 @@ public class TargetToUI : MonoBehaviour
     public TextMeshProUGUI range;
     public TextMeshProUGUI damage;
     public TextMeshProUGUI attackSpeed;
-    public TextMeshProUGUI buttonText;
+    public TextMeshProUGUI sellButtonText;
+    public TextMeshProUGUI upgradeButtonText;
     public GameObject parent;
     GameObject _selectedObject; //parent to the ui elements
     // Start is called before the first frame update
@@ -39,11 +40,13 @@ public class TargetToUI : MonoBehaviour
                 var towerInfo = selectedObject.GetComponent<TowerController>();
                 var attackRange = selectedObject.GetComponent<TargetFinder>().range;
                 name.text = towerInfo.towerName;
-                damage.text = $"Damage: {towerInfo.attackDamage}";
-                attackSpeed.text = $"Attack Speed: {((towerInfo.instantAttack)? "instant" : towerInfo.attackCooldown.ToString())}/s";
+                damage.text = $"Damage: {towerInfo.attackDamage.ToString("F2")}";
+                attackSpeed.text = $"Attack Speed: {((towerInfo.instantAttack)? "instant" : towerInfo.attackCooldown.ToString("F2"))}/s";
                 range.text = $"Range: {attackRange}";
-                buttonText.text = $"Sell <color=#FF8400>({towerInfo.cost/3}g)</color>";
-                buttonText.GetComponentInParent<Transform>().gameObject.SetActive(true);
+                sellButtonText.text = $"Sell <color=#FF8400>({towerInfo.cost/3}g)</color>";
+                sellButtonText.transform.parent.gameObject.SetActive(true);
+                upgradeButtonText.transform.parent.gameObject.SetActive(true);
+                upgradeButtonText.text = $"Upgrade <color=#FF8400>({towerInfo.cost}g)</color>";
                 break;
             case "Target":
                 var enemyInfo = selectedObject.GetComponent<EnemyController>();
@@ -51,7 +54,9 @@ public class TargetToUI : MonoBehaviour
                 damage.text = $"health: {enemyInfo.health}/{enemyInfo._maxHealth}";
                 attackSpeed.text = "";
                 range.text = "";
-                buttonText.transform.parent.gameObject.SetActive(false);
+                sellButtonText.transform.parent.gameObject.SetActive(false);
+                upgradeButtonText.transform.parent.gameObject.SetActive(false);
+
                 break;
 
         }

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4408852841353752607}
   - component: {fileID: 4408852841353752606}
   - component: {fileID: 4408852841353752594}
-  - component: {fileID: 4408852841353752595}
   - component: {fileID: 4408852841353752596}
   - component: {fileID: 4408852841353752597}
   m_Layer: 10
@@ -113,18 +112,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   attackClosestTarget: 1
---- !u!114 &4408852841353752595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4408852841353752605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bf10cdea1344482e91a4f2b58506b77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4408852841353752596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +129,7 @@ MonoBehaviour:
   instantAttack: 0
   attackCooldown: 1
   objectPooler: {fileID: 0}
+  cost: 10
 --- !u!208 &4408852841353752597
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -241,6 +229,30 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 182368, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
+      propertyPath: m_TagString
+      value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 182368, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 189574, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
+      propertyPath: m_TagString
+      value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 189574, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 171538, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
+      propertyPath: m_TagString
+      value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 171538, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 137822, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
       propertyPath: m_TagString
       value: Tower
@@ -254,30 +266,6 @@ PrefabInstance:
       value: Tower
       objectReference: {fileID: 0}
     - target: {fileID: 130282, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 182368, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
-      propertyPath: m_TagString
-      value: Tower
-      objectReference: {fileID: 0}
-    - target: {fileID: 182368, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 171538, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
-      propertyPath: m_TagString
-      value: Tower
-      objectReference: {fileID: 0}
-    - target: {fileID: 171538, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 189574, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
-      propertyPath: m_TagString
-      value: Tower
-      objectReference: {fileID: 0}
-    - target: {fileID: 189574, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}

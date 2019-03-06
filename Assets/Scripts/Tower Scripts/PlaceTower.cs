@@ -66,11 +66,9 @@ public class PlaceTower : MonoBehaviour
                     _targetInfoUI.parent.SetActive(false);
                     selectedObject = null;
                     CreateTower(newPos);
-                    StartCoroutine(BuildNavMesh());
                 }
                 else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
-                    print(hit.transform.tag);
                     selectedObject = hit.transform.gameObject;
                     _targetInfoUI.SetSelectedTower(selectedObject);
                     _targetInfoUI.parent.SetActive(true);
@@ -82,7 +80,7 @@ public class PlaceTower : MonoBehaviour
     private void CheckForCollisions()
     {
         var RaycastPoint = new Vector3(previewBox.transform.position.x, previewBox.transform.position.y + 2, previewBox.transform.position.z);
-        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, blockingLayer, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, raycastLayer, QueryTriggerInteraction.Ignore))
         {
             var hitTag = hit2.transform.gameObject.tag;
             if (hitTag == "Tower" || hitTag == "Restricted" || hitTag == "Target")
@@ -90,12 +88,13 @@ public class PlaceTower : MonoBehaviour
                 previewBox.GetComponent<Renderer>().material.color = new Color(140, 0, 0, .5f);
                 canPlaceTower = false;
             }
+            else
+            {
+                previewBox.GetComponent<Renderer>().material.color = new Color(0, 140, 0, .5f);
+                canPlaceTower = true;
+            }
         }
-        else
-        {
-            previewBox.GetComponent<Renderer>().material.color = new Color(0, 140, 0, .5f);
-            canPlaceTower = true;
-        }
+
     }
 
     private Vector3 CalculateNewPosition(RaycastHit hit)
@@ -118,10 +117,12 @@ public class PlaceTower : MonoBehaviour
         {
             if (box == null)
                 return;
+            StartCoroutine(BuildNavMesh());
             _gold.RemoveGold(cost);
             box.transform.position = newPos;
             box.SetActive(true);
-        } else
+        }
+        else
         {
             StartCoroutine(_gold.DisplayErrorText());
         }
@@ -140,11 +141,12 @@ public class PlaceTower : MonoBehaviour
     public void UpgradeTower()
     {
         var tower = selectedObject.GetComponent<TowerController>();
-        if(_gold.Gold >= tower.cost)
+        if (_gold.Gold >= tower.cost)
         {
-        _gold.RemoveGold(tower.cost / 3);
-        tower.UpgradeTower();
-        } else
+            _gold.RemoveGold(tower.cost / 3);
+            tower.UpgradeTower();
+        }
+        else
         {
             StartCoroutine(_gold.DisplayErrorText());
         }

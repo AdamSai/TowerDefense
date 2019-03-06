@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tower
   - Target
+  - Restricted
   layers:
   - Default
   - TransparentFX

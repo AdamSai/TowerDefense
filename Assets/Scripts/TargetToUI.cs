@@ -43,7 +43,7 @@ public class TargetToUI : MonoBehaviour
                 damage.text = $"Damage: {towerInfo.attackDamage.ToString("F2")}";
                 attackSpeed.text = $"Attack Speed: {((towerInfo.instantAttack)? "instant" : towerInfo.attackCooldown.ToString("F2"))}/s";
                 range.text = $"Range: {attackRange}";
-                sellButtonText.text = $"Sell <color=#FF8400>({towerInfo.cost/3}g)</color>";
+                sellButtonText.text = $"Sell <color=#FF8400>({towerInfo.cost/4}g)</color>";
                 sellButtonText.transform.parent.gameObject.SetActive(true);
                 upgradeButtonText.transform.parent.gameObject.SetActive(true);
                 upgradeButtonText.text = $"Upgrade <color=#FF8400>({towerInfo.cost}g)</color>";

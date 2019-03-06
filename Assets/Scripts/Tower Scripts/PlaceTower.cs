@@ -54,22 +54,42 @@ public class PlaceTower : MonoBehaviour
             }
 
             if (uiController.ShowingBuildUI)
+            {
                 _targetInfoUI.parent.SetActive(false);
+                if (selectedObject && selectedObject.CompareTag("Tower"))
+                        selectedObject.GetComponent<TowerController>().isSelected = false;
+            }
 
             else
                 previewBox.SetActive(false);
 
+
             if (Input.GetButtonDown("Fire1"))
             {
+                if (selectedObject)
+                {
+                    if (selectedObject.CompareTag("Tower") && selectedObject != hit.transform.gameObject && hit.transform.CompareTag("Tower"))
+                    {
+                        selectedObject.GetComponent<TowerController>().isSelected = false;
+                    }
+                    if(hit.transform.CompareTag("Target"))
+                        selectedObject.GetComponent<TowerController>().isSelected = false;
+
+                }
+
+
+                //Create tower
                 if (canPlaceTower && objectPooler != null && uiController.ShowingBuildUI)
                 {
-                    _targetInfoUI.parent.SetActive(false);
                     selectedObject = null;
                     CreateTower(newPos);
                 }
+                //Select target to display in UI
                 else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
                     selectedObject = hit.transform.gameObject;
+                    if(selectedObject.CompareTag("Tower"))
+                        selectedObject.GetComponent<TowerController>().isSelected = true;
                     _targetInfoUI.SetSelectedTower(selectedObject);
                     _targetInfoUI.parent.SetActive(true);
                 }
@@ -133,7 +153,7 @@ public class PlaceTower : MonoBehaviour
         BuildNavMesh();
 
         var cost = selectedObject.GetComponent<TowerController>().cost;
-        _gold.AddGold(cost / 3);
+        _gold.AddGold(cost / 4);
         selectedObject.gameObject.SetActive(false);
         _targetInfoUI.parent.SetActive(false);
     }

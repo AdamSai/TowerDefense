@@ -10,9 +10,22 @@ public partial class TowerController : MonoBehaviour
     public float attackCooldown = 1f;
     public ObjectPooler objectPooler;
     public int cost = 10;
+    public bool isSelected = false;
     int i = 1;
     bool _canAttack = true;
     Collider _selectedTarget;
+    string _startName;
+    float _startdDamage;
+    float _startCooldown;
+    int _startCost;
+
+    private void Awake()
+    {
+        _startName = towerName;
+        _startdDamage = attackDamage;
+        _startCooldown = attackCooldown;
+        _startCost = cost;
+    }
 
     // Update is called once per frame
     void Update()
@@ -20,6 +33,14 @@ public partial class TowerController : MonoBehaviour
         if (_canAttack)
         {
             Attack();
+        }
+        if(isSelected)
+        {
+            transform.GetChild(1).gameObject.SetActive(true);
+        } else
+        {
+            transform.GetChild(1).gameObject.SetActive(false);
+
         }
     }
 
@@ -70,10 +91,18 @@ public partial class TowerController : MonoBehaviour
 
     private void OnEnable()
     {
-        cost += Mathf.RoundToInt(cost *  1.5f);
-        _canAttack = true;
+
     }
 
+    private void OnDisable()
+    {
+        _canAttack = true;
+        cost = _startCost;
+        attackDamage = _startdDamage;
+        attackCooldown = _startCooldown;
+        towerName = _startName;
+        i = 1;
+    }
 
     public static string ToRoman(int number)
     {

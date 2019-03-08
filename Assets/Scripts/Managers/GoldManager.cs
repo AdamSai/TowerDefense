@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
+
 public class GoldManager : MonoBehaviour
 {
     public int Gold { get; private set; } = 100;
@@ -12,6 +14,12 @@ public class GoldManager : MonoBehaviour
     {
         GoldText.text = $"Gold: <color=yellow>{((Gold < 10) ? 0 + Gold.ToString() : Gold.ToString())}</color>";
         ErrorText.text = "";
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G) && Debug.isDebugBuild)
+            AddGold(10000000);
     }
 
     public void AddGold(int amount)

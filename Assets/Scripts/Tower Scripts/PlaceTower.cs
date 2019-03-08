@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class PlaceTower : MonoBehaviour
 {
@@ -50,6 +51,12 @@ public class PlaceTower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Prevent raycasting through buttons
+        if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.CompareTag("UI"))
+        {
+            return;
+        }
+
         if (_doubleClickTracker >= doubleClickTimer)
         {
             _clickCounter = 0;
@@ -90,6 +97,8 @@ public class PlaceTower : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1"))
             {
+
+
 
                 if (selectedObject)
                 {
@@ -136,7 +145,9 @@ public class PlaceTower : MonoBehaviour
                         _targetInfoUI.parent.SetActive(true);
                     }
                 }
+
             }
+
         }
     }
 
@@ -245,7 +256,7 @@ public class PlaceTower : MonoBehaviour
                 StartCoroutine(_gold.DisplayErrorText());
                 break;
             }
-            if (_gold.Gold >= _selectedTowers[i].cost)
+            else if (_gold.Gold >= _selectedTowers[i].cost)
             {
                 _gold.RemoveGold(_selectedTowers[i].cost);
                 _selectedTowers[i].UpgradeTower();

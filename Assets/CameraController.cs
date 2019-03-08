@@ -20,23 +20,27 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.mousePosition.x <= moveBorder && playerCamera.position.x >= minX)
+        if (playerCamera.position.x >= minX)
         {
-            playerCamera.position -= new Vector3(panSpeed * Time.deltaTime, 0, 0);
+            if (Input.mousePosition.x <= moveBorder || Input.GetKey(KeyCode.A))
+                playerCamera.position -= new Vector3(panSpeed * Time.deltaTime, 0, 0);
         }
 
-        if (Input.mousePosition.x >= Screen.width - moveBorder && playerCamera.transform.position.x <= maxX)
+        if (playerCamera.transform.position.x <= maxX)
         {
-            playerCamera.position += new Vector3(panSpeed * Time.deltaTime, 0, 0);
+            if(Input.mousePosition.x >= Screen.width - moveBorder || Input.GetKey(KeyCode.D))
+                playerCamera.position += new Vector3(panSpeed * Time.deltaTime, 0, 0);
         }
 
-        if (Input.mousePosition.y <= moveBorder && playerCamera.transform.position.z > minZ)
+        if (playerCamera.transform.position.z > minZ)
         {
-            playerCamera.position -= new Vector3(0, 0, panSpeed * Time.deltaTime);
+            if(Input.mousePosition.y <= moveBorder || Input.GetKey(KeyCode.S))
+                playerCamera.position -= new Vector3(0, 0, panSpeed * Time.deltaTime);
         }
-        if (Input.mousePosition.y >= Screen.height - moveBorder && playerCamera.position.z <= maxZ)
+        if (playerCamera.position.z <= maxZ)
         {
-            playerCamera.position += new Vector3(0, 0, panSpeed * Time.deltaTime);
+            if(Input.mousePosition.y >= Screen.height - moveBorder || Input.GetKey(KeyCode.W))
+                playerCamera.position += new Vector3(0, 0, panSpeed * Time.deltaTime);
         }
     }
 }

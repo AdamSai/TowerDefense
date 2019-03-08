@@ -224,7 +224,6 @@ public class PlaceTower : MonoBehaviour
 
     public void SellTower()
     {
-        BuildNavMesh();
         foreach (TowerController tower in _selectedTowers)
         {
             _gold.AddGold(tower.cost / 4);
@@ -232,7 +231,7 @@ public class PlaceTower : MonoBehaviour
             _targetInfoUI.parent.SetActive(false);
         }
         DeselectAllTowers();
-
+        StartCoroutine(BuildNavMesh());
     }
 
     public void UpgradeTower()
@@ -274,7 +273,6 @@ public class PlaceTower : MonoBehaviour
 
     IEnumerator BuildNavMesh()
     {
-        surface.RemoveData();
         surface.BuildNavMesh();
         yield return null;
     }

@@ -19,7 +19,7 @@ public partial class TowerController : MonoBehaviour
     float _startCooldown;
     int _startCost;
 
-    private void Awake()
+    private void Awake()    
     {
         _startName = towerName;
         _startdDamage = attackDamage;
@@ -40,7 +40,6 @@ public partial class TowerController : MonoBehaviour
         } else
         {
             transform.GetChild(1).gameObject.SetActive(false);
-
         }
     }
 

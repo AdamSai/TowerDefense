@@ -23,9 +23,11 @@ public class PlaceTower : MonoBehaviour
     float _newZ;
     TargetToUI _targetInfoUI;
     GameObject _gameManager;
+
     float _doubleClickTracker;
     int _clickCounter = 1;
     bool _trackClickTimer = false;
+
     GameObject _towerContainer;
     List<TowerController> _selectedTowers;
 
@@ -77,7 +79,7 @@ public class PlaceTower : MonoBehaviour
                 if (selectedObject && selectedObject.CompareTag("Tower"))
                 {
                     selectedObject.GetComponent<TowerController>().isSelected = false;
-                    SelectOrDeselectAllTowerByName(false, selectedObject.GetComponent<TowerController>());
+                    SelectOrDeselectTowersByName(false, selectedObject.GetComponent<TowerController>());
                     DeselectAllTowers();
                 }
             }
@@ -93,20 +95,17 @@ public class PlaceTower : MonoBehaviour
                 {
                     if (selectedObject.CompareTag("Tower") && selectedObject != hit.transform.gameObject && hit.transform.CompareTag("Tower"))
                     {
-                        SelectOrDeselectAllTowerByName(false, selectedObject.GetComponent<TowerController>());
+                        SelectOrDeselectTowersByName(false, selectedObject.GetComponent<TowerController>());
 
                         selectedObject.GetComponent<TowerController>().isSelected = false;
 
                     }
                     if (hit.transform.CompareTag("Target"))
                     {
-                        selectedObject.GetComponent<TowerController>().isSelected = false;
-                        //SelectOrDeselectAllTowerByName(false, selectedObject.GetComponent<TowerController>());
-
+                        DeselectAllTowers();
                     }
 
                 }
-
 
                 //Create tower
                 if (canPlaceTower && objectPooler != null && uiController.ShowingBuildUI)
@@ -119,9 +118,9 @@ public class PlaceTower : MonoBehaviour
                 {
                     _trackClickTimer = true;
                     _clickCounter++;
-                    if (_clickCounter % 2 == 0)
+                    if (_clickCounter % 2 == 0 && _selectedTowers.Count > 0)
                     {
-                        SelectOrDeselectAllTowerByName(true, selectedObject.GetComponent<TowerController>());
+                        SelectOrDeselectTowersByName(true, selectedObject.GetComponent<TowerController>());
                     }
                     else
                     {
@@ -150,7 +149,7 @@ public class PlaceTower : MonoBehaviour
         _selectedTowers = new List<TowerController>();
     }
 
-    private void SelectOrDeselectAllTowerByName(bool isSelected, TowerController selectedTower)
+    private void SelectOrDeselectTowersByName(bool isSelected, TowerController selectedTower)
     {
         DeselectAllTowers();
         TowerController[] allTowers = _towerContainer.GetComponentsInChildren<TowerController>(false);
@@ -174,8 +173,8 @@ public class PlaceTower : MonoBehaviour
 
     private void CheckForCollisions()
     {
-        var RaycastPoint = new Vector3(previewBox.transform.position.x, previewBox.transform.position.y + 2, previewBox.transform.position.z);
-        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 10f, raycastLayer, QueryTriggerInteraction.Ignore))
+        var RaycastPoint = new Vector3(previewBox.transform.position.x, previewBox.transform.position.y + 100, previewBox.transform.position.z);
+        if (Physics.SphereCast(RaycastPoint, .5f, Vector3.down, out RaycastHit hit2, 200f, raycastLayer, QueryTriggerInteraction.Ignore))
         {
             var hitTag = hit2.transform.gameObject.tag;
             if (hitTag == "Tower" || hitTag == "Restricted" || hitTag == "Target")

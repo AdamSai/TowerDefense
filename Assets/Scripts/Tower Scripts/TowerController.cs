@@ -91,7 +91,7 @@ public partial class TowerController : MonoBehaviour
 
     private void OnEnable()
     {
-
+        cost += Mathf.RoundToInt(cost * 1.5f);
     }
 
     private void OnDisable()
@@ -101,6 +101,7 @@ public partial class TowerController : MonoBehaviour
         attackDamage = _startdDamage;
         attackCooldown = _startCooldown;
         towerName = _startName;
+        isSelected = false;
         i = 1;
     }
 

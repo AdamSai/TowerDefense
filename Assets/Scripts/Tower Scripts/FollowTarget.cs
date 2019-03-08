@@ -35,9 +35,6 @@ public class FollowTarget : MonoBehaviour
     {
         this.damage = damage;
     }
-
-
-
 }
 
 

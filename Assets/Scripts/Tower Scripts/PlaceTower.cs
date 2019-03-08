@@ -12,6 +12,7 @@ public class PlaceTower : MonoBehaviour
     private ObjectPooler objectPooler;
     public bool canPlaceTower = true;
     public UIController uiController;
+    public float doubleClickTimer = 0.5f;
 
 
     GoldManager _gold;
@@ -22,12 +23,19 @@ public class PlaceTower : MonoBehaviour
     float _newZ;
     TargetToUI _targetInfoUI;
     GameObject _gameManager;
+    float _doubleClickTracker;
+    int _clickCounter = 1;
+    bool _trackClickTimer = false;
+    GameObject _towerContainer;
+    List<TowerController> _selectedTowers;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _selectedTowers = new List<TowerController>();
         _gameManager = GameObject.Find("Game Manager");
+        _towerContainer = GameObject.Find("Towers");
         _gold = _gameManager.GetComponent<GoldManager>();
         _targetInfoUI = _gameManager.GetComponent<TargetToUI>();
         _previewBoxRenderer = previewBox.GetComponent<Renderer>();
@@ -40,6 +48,16 @@ public class PlaceTower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_doubleClickTracker >= doubleClickTimer)
+        {
+            _clickCounter = 0;
+            _doubleClickTracker = 0;
+            _trackClickTimer = false;
+        }
+        if (_trackClickTimer)
+        {
+            _doubleClickTracker += Time.deltaTime;
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, raycastLayer))
@@ -57,7 +75,11 @@ public class PlaceTower : MonoBehaviour
             {
                 _targetInfoUI.parent.SetActive(false);
                 if (selectedObject && selectedObject.CompareTag("Tower"))
-                        selectedObject.GetComponent<TowerController>().isSelected = false;
+                {
+                    selectedObject.GetComponent<TowerController>().isSelected = false;
+                    SelectOrDeselectAllTowerByName(false, selectedObject.GetComponent<TowerController>());
+                    DeselectAllTowers();
+                }
             }
 
             else
@@ -66,14 +88,22 @@ public class PlaceTower : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1"))
             {
+
                 if (selectedObject)
                 {
                     if (selectedObject.CompareTag("Tower") && selectedObject != hit.transform.gameObject && hit.transform.CompareTag("Tower"))
                     {
+                        SelectOrDeselectAllTowerByName(false, selectedObject.GetComponent<TowerController>());
+
                         selectedObject.GetComponent<TowerController>().isSelected = false;
+
                     }
-                    if(hit.transform.CompareTag("Target"))
+                    if (hit.transform.CompareTag("Target"))
+                    {
                         selectedObject.GetComponent<TowerController>().isSelected = false;
+                        //SelectOrDeselectAllTowerByName(false, selectedObject.GetComponent<TowerController>());
+
+                    }
 
                 }
 
@@ -87,13 +117,58 @@ public class PlaceTower : MonoBehaviour
                 //Select target to display in UI
                 else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
-                    selectedObject = hit.transform.gameObject;
-                    if(selectedObject.CompareTag("Tower"))
-                        selectedObject.GetComponent<TowerController>().isSelected = true;
-                    _targetInfoUI.SetSelectedTower(selectedObject);
-                    _targetInfoUI.parent.SetActive(true);
+                    _trackClickTimer = true;
+                    _clickCounter++;
+                    if (_clickCounter % 2 == 0)
+                    {
+                        SelectOrDeselectAllTowerByName(true, selectedObject.GetComponent<TowerController>());
+                    }
+                    else
+                    {
+                        DeselectAllTowers();
+
+                        selectedObject = hit.transform.gameObject;
+                        if (selectedObject.CompareTag("Tower"))
+                        {
+                            selectedObject.GetComponent<TowerController>().isSelected = true;
+                            _selectedTowers.Add(selectedObject.GetComponent<TowerController>());
+                        }
+                        _targetInfoUI.SetSelectedTower(selectedObject);
+                        _targetInfoUI.parent.SetActive(true);
+                    }
                 }
             }
+        }
+    }
+
+    private void DeselectAllTowers()
+    {
+        foreach (TowerController tower in _selectedTowers)
+        {
+            tower.isSelected = false;
+        }
+        _selectedTowers = new List<TowerController>();
+    }
+
+    private void SelectOrDeselectAllTowerByName(bool isSelected, TowerController selectedTower)
+    {
+        DeselectAllTowers();
+        TowerController[] allTowers = _towerContainer.GetComponentsInChildren<TowerController>(false);
+        for (int i = 0; i < allTowers.Length; i++)
+        {
+            if (allTowers[i] != selectedObject.GetComponent<TowerController>() && allTowers[i].towerName == selectedTower.towerName)
+            {
+                _selectedTowers.Add(allTowers[i]);
+            }
+        }
+        //The selected object is added in the last index, so it will always be the first element to be upgraded
+        //when we loop backwards through the list.
+        //We loop backwards in case we need to remove an element from the list while iterating in other parts of the code
+        _selectedTowers.Add(selectedObject.GetComponent<TowerController>());
+        foreach (TowerController tower in _selectedTowers)
+        {
+            if (tower.towerName == selectedTower.towerName)
+                tower.isSelected = isSelected;
         }
     }
 
@@ -151,24 +226,50 @@ public class PlaceTower : MonoBehaviour
     public void SellTower()
     {
         BuildNavMesh();
+        foreach (TowerController tower in _selectedTowers)
+        {
+            _gold.AddGold(tower.cost / 4);
+            tower.gameObject.SetActive(false);
+            _targetInfoUI.parent.SetActive(false);
+        }
+        DeselectAllTowers();
 
-        var cost = selectedObject.GetComponent<TowerController>().cost;
-        _gold.AddGold(cost / 4);
-        selectedObject.gameObject.SetActive(false);
-        _targetInfoUI.parent.SetActive(false);
     }
 
     public void UpgradeTower()
     {
-        var tower = selectedObject.GetComponent<TowerController>();
-        if (_gold.Gold >= tower.cost)
+        TowerController upgradedTower = null;
+        for (int i = _selectedTowers.Count - 1; i >= 0; i--)
         {
-            _gold.RemoveGold(tower.cost / 3);
-            tower.UpgradeTower();
+            //If no towers can be upgraded, break so the towers aren't deselected
+            if (i == _selectedTowers.Count - 1 && _gold.Gold < _selectedTowers[i].cost)
+            {
+                StartCoroutine(_gold.DisplayErrorText());
+                break;
+            }
+            if (_gold.Gold >= _selectedTowers[i].cost)
+            {
+                _gold.RemoveGold(_selectedTowers[i].cost);
+                _selectedTowers[i].UpgradeTower();
+                upgradedTower = _selectedTowers[i];
+            }
+            else if (_gold.Gold < _selectedTowers[i].cost)
+            {
+                StartCoroutine(_gold.DisplayErrorText());
+                break;
+            }
         }
-        else
+        //Deselected towers which have not been upgraded
+        if (upgradedTower)
         {
-            StartCoroutine(_gold.DisplayErrorText());
+            for (int i = _selectedTowers.Count - 1; i >= 0; i--)
+            {
+                if (_selectedTowers[i].towerName != upgradedTower.towerName)
+                {
+                    _selectedTowers[i].isSelected = false;
+                    _selectedTowers.Remove(_selectedTowers[i]);
+                }
+            }
         }
     }
 

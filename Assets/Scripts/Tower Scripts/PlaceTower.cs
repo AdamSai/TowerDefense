@@ -59,7 +59,7 @@ public class PlaceTower : MonoBehaviour
 
         if (_doubleClickTracker >= doubleClickTimer)
         {
-            _clickCounter = 0;
+            _clickCounter = 1;
             _doubleClickTracker = 0;
             _trackClickTimer = false;
         }
@@ -125,8 +125,21 @@ public class PlaceTower : MonoBehaviour
                 //Select target to display in UI
                 else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
-                    _trackClickTimer = true;
-                    _clickCounter++;
+                    if (selectedObject == hit.transform.gameObject && _trackClickTimer)
+                    {
+                        _trackClickTimer = true;
+                        if (_clickCounter == 1)
+                            _clickCounter++;
+                        else
+                            _clickCounter = 1;
+                        
+                    }
+                    else
+                    {
+                        _trackClickTimer = true;
+                        _clickCounter = 1;
+                        _doubleClickTracker = 0;
+                    }
                     if (_clickCounter % 2 == 0 && _selectedTowers.Count > 0)
                     {
                         SelectOrDeselectTowersByName(true, selectedObject.GetComponent<TowerController>());
@@ -134,7 +147,6 @@ public class PlaceTower : MonoBehaviour
                     else
                     {
                         DeselectAllTowers();
-
                         selectedObject = hit.transform.gameObject;
                         if (selectedObject.CompareTag("Tower"))
                         {
@@ -284,8 +296,8 @@ public class PlaceTower : MonoBehaviour
 
     IEnumerator BuildNavMesh()
     {
+        yield return new WaitForEndOfFrame();
         surface.BuildNavMesh();
-        yield return null;
     }
 
     public void SetObjectPooler(ObjectPooler newPooler)

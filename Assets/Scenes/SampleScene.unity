@@ -118,7 +118,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh6196
+  m_Name: pb_Mesh13714
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -1531,7 +1531,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh6346
+  m_Name: pb_Mesh13886
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -1697,7 +1697,7 @@ GameObject:
   - component: {fileID: 226612566}
   - component: {fileID: 226612565}
   - component: {fileID: 226612564}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Restricted
   m_Icon: {fileID: 0}
@@ -2259,7 +2259,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh6000
+  m_Name: pb_Mesh13496
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -3334,9 +3334,9 @@ MonoBehaviour:
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 0
   m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.06666667
-  m_BuildHeightMesh: 1
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.1
+  m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
 --- !u!114 &881553845
 MonoBehaviour:
@@ -3463,7 +3463,7 @@ GameObject:
   - component: {fileID: 966315305}
   - component: {fileID: 966315304}
   - component: {fileID: 966315303}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Restricted
   m_Icon: {fileID: 0}
@@ -5422,7 +5422,7 @@ GameObject:
   - component: {fileID: 1469215389}
   - component: {fileID: 1469215388}
   - component: {fileID: 1469215387}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Restricted
   m_Icon: {fileID: 0}
@@ -5642,7 +5642,7 @@ GameObject:
   - component: {fileID: 1529309416}
   - component: {fileID: 1529309415}
   - component: {fileID: 1529309414}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Restricted
   m_Icon: {fileID: 0}

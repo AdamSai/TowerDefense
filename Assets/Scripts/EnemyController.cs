@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-
+    public NavMeshSurface surface;
     public string enemyName = "Enemy";
     public Transform destination;
     public float movementSpeed;
@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
     public float timeToDestroyIfNoPath = 2f;
     public LayerMask TowerLayer;
     public float _maxHealth { get; private set; }
-
+    public Animator animator;
     GoldManager _gold;
     float _DestroyTowerTimer;
     NavMeshAgent _agent;
@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     GameObject _gameManager;
     RoundManager _roundManager;
     int _curRound;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -41,6 +42,21 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_agent.velocity.magnitude > 2)
+        {
+            animator.SetBool("isRunning", true);
+            animator.SetBool("isWalking", false);
+        }
+        else if (_agent.velocity.magnitude > 0.1f && _agent.velocity.magnitude <= 2)
+        {
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
+        }
         _curRound = _roundManager._currentRound;
         if (health <= 0)
         {
@@ -117,6 +133,7 @@ public class EnemyController : MonoBehaviour
     private void DestroyClosestTarget(Collider closestTarget)
     {
         closestTarget.gameObject.SetActive(false);
+        surface.BuildNavMesh();
     }
 
     private IEnumerator MoveEnemy()

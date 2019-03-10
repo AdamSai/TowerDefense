@@ -37,63 +37,72 @@ public class EnemyController : MonoBehaviour
         _maxHealth = health;
         _gold = _gameManager.GetComponent<GoldManager>();
         _roundManager = _gameManager.GetComponent<RoundManager>();
+        _curRound = _roundManager._currentRound;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_agent.velocity.magnitude > 2)
-        {
-            animator.SetBool("isRunning", true);
-            animator.SetBool("isWalking", false);
-        }
-        else if (_agent.velocity.magnitude > 0.1f && _agent.velocity.magnitude <= 2)
-        {
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isWalking", true);
-        }
-        else
-        {
-            animator.SetBool("isWalking", false);
-            animator.SetBool("isRunning", false);
-        }
-        _curRound = _roundManager._currentRound;
+
         if (health <= 0)
         {
             int rand;
-            if(_curRound < 5)
+            if (_curRound < 10)
                 rand = UnityEngine.Random.Range(1, 4);
-            else if(_curRound < 15)
+            else if (_curRound < 20)
                 rand = UnityEngine.Random.Range(3, 7);
-            else if(_curRound < 25)
+            else if (_curRound < 30)
                 rand = UnityEngine.Random.Range(6, 10);
             else
                 rand = UnityEngine.Random.Range(10, 20);
+            if (_curRound % 5 == 0)
+                rand += 50 * (_curRound / 5);
+            if (_curRound % 7 == 0)
+                rand *= 2;
             _gold.AddGold(rand);
             gameObject.SetActive(false);
         }
 
-
-        if (gameObject.activeInHierarchy)
+        var endPos = new Vector3(destination.position.x, transform.position.y, destination.position.z);
+        //Only use these animations if it is not a flying round
+        if (_curRound % 7 != 0)
         {
-            NavMesh.CalculatePath(transform.position, destination.position, _agent.areaMask, _moveToPath);
-            StartCoroutine(MoveEnemy());
-        }
+            if (_curRound % 5 == 0)
+            {
+                animator.SetBool("isWalking", true);
+                animator.SetBool("isRunning", false);
+            }
+            else
+            {
+                animator.SetBool("isWalking", false);
+                animator.SetBool("isRunning", true);
+            }
 
-        if (_DestroyTowerTimer >= timeToDestroyIfNoPath)
-        {
-            LookForTower();
-        }
+            if (gameObject.activeInHierarchy)
+            {
+                NavMesh.CalculatePath(transform.position, destination.position, _agent.areaMask, _moveToPath);
+                StartCoroutine(MoveEnemy());
+            }
 
-        if (_agent.pathStatus != NavMeshPathStatus.PathComplete)
-        {
-            _DestroyTowerTimer += Time.deltaTime;
+            if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy && (transform.position - _agent.destination).sqrMagnitude < 1f)
+            {
+                StartCoroutine(LookForTower());
+            }
+
+            if (_agent.pathStatus != NavMeshPathStatus.PathComplete)
+            {
+                _DestroyTowerTimer += Time.deltaTime;
+            }
+            else
+            {
+                _DestroyTowerTimer = 0;
+            }
         }
         else
         {
-            _DestroyTowerTimer = 0;
+            transform.LookAt(endPos);
+            transform.position = Vector3.MoveTowards(transform.position, endPos, movementSpeed * Time.deltaTime);
         }
-        var endPos = new Vector3(destination.position.x, transform.position.y, destination.position.z);
         if ((transform.position - endPos).sqrMagnitude < 0.1f)
         {
             gameObject.SetActive(false);
@@ -103,15 +112,27 @@ public class EnemyController : MonoBehaviour
 
     private void OnEnable()
     {
-        _maxHealth += _curRound * 13;
+        _curRound = _roundManager._currentRound;
+        if (_curRound == 1)
+        {
+            _maxHealth = 10;
+        }
+        else if (_curRound % 5 == 0)
+        {
+            _maxHealth = _curRound * 1500;
+        }
+        else
+        {
+            _maxHealth = Mathf.FloorToInt((10 * 1.5f) * _curRound);
+        }
         health = _maxHealth;
-        print("health: " + (_maxHealth + _curRound * 15));
+        print("health: " + (health));
     }
 
-    private void LookForTower()
+    private IEnumerator LookForTower()
     {
         Collider ClosestTarget = null;
-        _targets = Physics.OverlapSphere(transform.position, 2f, TowerLayer, QueryTriggerInteraction.Collide);
+        _targets = Physics.OverlapSphere(transform.position, 1f, TowerLayer, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < _targets.Length; i++)
         {
@@ -127,6 +148,8 @@ public class EnemyController : MonoBehaviour
 
         if (_targets.Length > 0)
             DestroyClosestTarget(ClosestTarget);
+
+        yield return new WaitForSeconds(2f);
 
     }
 

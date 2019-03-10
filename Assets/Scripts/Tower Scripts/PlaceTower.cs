@@ -52,10 +52,7 @@ public class PlaceTower : MonoBehaviour
     void Update()
     {
         //Prevent raycasting through buttons
-        if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.CompareTag("UI"))
-        {
-            return;
-        }
+
 
         if (_doubleClickTracker >= doubleClickTimer)
         {
@@ -93,13 +90,13 @@ public class PlaceTower : MonoBehaviour
 
             else
                 previewBox.SetActive(false);
-
+            if (EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.CompareTag("UI"))
+            {
+                return;
+            }
 
             if (Input.GetButtonDown("Fire1"))
             {
-
-
-
                 if (selectedObject)
                 {
                     if (selectedObject.CompareTag("Tower") && selectedObject != hit.transform.gameObject && hit.transform.CompareTag("Tower"))
@@ -132,7 +129,6 @@ public class PlaceTower : MonoBehaviour
                             _clickCounter++;
                         else
                             _clickCounter = 1;
-                        
                     }
                     else
                     {

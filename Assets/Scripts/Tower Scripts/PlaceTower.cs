@@ -52,7 +52,8 @@ public class PlaceTower : MonoBehaviour
     void Update()
     {
         //Prevent raycasting through buttons
-
+        if (Time.timeScale == 0)
+            return;
 
         if (_doubleClickTracker >= doubleClickTimer)
         {

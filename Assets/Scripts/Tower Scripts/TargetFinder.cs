@@ -13,11 +13,14 @@ public class TargetFinder : MonoBehaviour
     Collider[] _targets;
     Transform _towerMesh;
     bool _searching = true;
+    string towerName;
 
     private void Start()
     {
+        towerName = GetComponent<TowerController>().towerName;
         _searching = true;
-        _towerMesh = transform.GetChild(0).GetChild(1);
+        if (towerName.StartsWith("Tower"))
+            _towerMesh = transform.GetChild(0).GetChild(1);
     }
     void FixedUpdate()
     {
@@ -34,8 +37,12 @@ public class TargetFinder : MonoBehaviour
             var lookPos = SelectedTarget.transform.position - transform.position;
             lookPos.y = 0;
             var rotation = Quaternion.LookRotation(lookPos);
-
-            _towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
+            if(towerName.StartsWith("Tower"))
+                _towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
+            else if (towerName.StartsWith("Laser"))
+            {
+                transform.rotation = Quaternion.LookRotation(lookPos);// (transform.rotation, rotation, 1);
+            }
 
             if (Vector3.Distance(SelectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)
             {
@@ -66,7 +73,7 @@ public class TargetFinder : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
         _searching = true;
     }
 }

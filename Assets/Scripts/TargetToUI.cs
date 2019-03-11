@@ -41,7 +41,7 @@ public class TargetToUI : MonoBehaviour
                 var attackRange = selectedObject.GetComponent<TargetFinder>().range;
                 name.text = towerInfo.towerName;
                 damage.text = $"Damage: {towerInfo.attackDamage.ToString("F2")}";
-                attackSpeed.text = $"Attack Speed: {((towerInfo.instantAttack)? "instant" : towerInfo.attackCooldown.ToString("F2"))}/s";
+                attackSpeed.text = $"Attack Speed: {towerInfo.attackCooldown.ToString("F2")}";
                 range.text = $"Range: {attackRange}";
                 sellButtonText.text = $"Sell <color=#FF8400>({towerInfo.cost/4}g)</color>";
                 sellButtonText.transform.parent.gameObject.SetActive(true);
@@ -51,7 +51,7 @@ public class TargetToUI : MonoBehaviour
             case "Target":
                 var enemyInfo = selectedObject.GetComponent<EnemyController>();
                 name.text = enemyInfo.enemyName;
-                damage.text = $"health: {enemyInfo.health}/{enemyInfo._maxHealth}";
+                damage.text = $"health: {enemyInfo.health.ToString("F2")}/{enemyInfo._maxHealth}";
                 attackSpeed.text = "";
                 range.text = "";
                 sellButtonText.transform.parent.gameObject.SetActive(false);

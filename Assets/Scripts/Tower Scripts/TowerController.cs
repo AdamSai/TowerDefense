@@ -11,6 +11,7 @@ public partial class TowerController : MonoBehaviour
     public ObjectPooler objectPooler;
     public int cost = 10;
     public bool isSelected = false;
+    public Transform fireFrom;
     int i = 1;
     bool _canAttack = true;
     Collider _selectedTarget;
@@ -18,13 +19,16 @@ public partial class TowerController : MonoBehaviour
     float _startdDamage;
     float _startCooldown;
     int _startCost;
+    LineRenderer line;
 
-    private void Awake()    
+    private void Awake()
     {
         _startName = towerName;
         _startdDamage = attackDamage;
         _startCooldown = attackCooldown;
         _startCost = cost;
+        if (instantAttack)
+            line = GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
@@ -34,10 +38,11 @@ public partial class TowerController : MonoBehaviour
         {
             Attack();
         }
-        if(isSelected)
+        if (isSelected)
         {
             transform.GetChild(1).gameObject.SetActive(true);
-        } else
+        }
+        else
         {
             transform.GetChild(1).gameObject.SetActive(false);
         }
@@ -46,12 +51,11 @@ public partial class TowerController : MonoBehaviour
 
     void Attack()
     {
-        _canAttack = false;
         _selectedTarget = GetComponent<TargetFinder>().SelectedTarget;
-        StartCoroutine(SetCanAttack());
-
         if (!instantAttack && _selectedTarget != null)
         {
+            _canAttack = false;
+            StartCoroutine(SetCanAttack());
             var projectile = objectPooler.GetPooledObject(); //  Instantiate(projectile, transform.position, Quaternion.identity);
             if (projectile == null)
             {
@@ -66,19 +70,40 @@ public partial class TowerController : MonoBehaviour
                 projectile.SetActive(true);
             }
         }
+        else if (_selectedTarget)
+        {
+            _canAttack = true;
+            line.SetPosition(0, fireFrom.position);
+            line.SetPosition(1, _selectedTarget.transform.position);
+            line.enabled = true;
+            var enemy = _selectedTarget.GetComponent<EnemyController>();
+            StartCoroutine(LaserAttacK(enemy));
+        }
+        if(line && !_selectedTarget)
+            line.enabled = false;
+
+    }
+
+    IEnumerator LaserAttacK(EnemyController enemy)
+    {
+        if (enemy.transform.position.y - transform.position.y > 5f)
+            enemy.health -= attackDamage * 3;
+        else
+            enemy.health -= attackDamage;
+        yield return new WaitForSeconds(attackCooldown);
 
     }
 
     public void UpgradeTower()
     {
         i++;
-        attackDamage += (attackDamage *  1.5f);
-        if(attackCooldown > 0.1f)
+        attackDamage += (attackDamage * 1.5f);
+        if (attackCooldown > 0.1f)
         {
             attackCooldown -= 0.1f;
         }
         cost += Mathf.RoundToInt(cost * 1.5f);
-        towerName = "Tower " + ToRoman(i);
+        towerName = towerName + " " + ToRoman(i);
 
     }
 

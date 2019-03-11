@@ -18,7 +18,7 @@ public class GoldManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G) && Debug.isDebugBuild)
+        if (Input.GetKeyDown(KeyCode.G)) // && Debug.isDebugBuild)
             AddGold(10000000);
     }
 

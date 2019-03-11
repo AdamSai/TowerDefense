@@ -18,7 +18,7 @@ public class EnemySpawner : MonoBehaviour
     public RoundManager RoundManager;
     int _spawnCounter;
     int _regularSpawnAmount;
-    NavMeshAgent agnet;
+    NavMeshAgent agent;
 
     private void Awake()
     {
@@ -44,14 +44,12 @@ public class EnemySpawner : MonoBehaviour
 
         if (RoundManager.isFlyingRound && RoundManager.isBossRound)
         {
-            print("Flying boss time");
             pooler = flyingBoss;
             SpawnAmount = 1;
             newY = transform.position.y + 5;
         }
         else if (RoundManager.isFlyingRound)
         {
-            print("flyiing");
             pooler = flyingEnemy;
             SpawnAmount = _regularSpawnAmount;
             newY = transform.position.y + 5;
@@ -91,12 +89,38 @@ public class EnemySpawner : MonoBehaviour
                     newX = SpawnPoint.transform.position.x + (x * XDistance);
                     newZ = SpawnPoint.transform.position.z - (z + zOffset);
                 }
-                agnet = enemy.GetComponent<NavMeshAgent>();
+                //agent = enemy.GetComponent<NavMeshAgent>();
                                              //minus with 0.01 so the enemy hits the ground & navmeshagent will work
-                agnet.Warp(new Vector3(newX, newY + enemy.transform.localScale.y - 0.01f, newZ));
+                enemy.transform.position = new Vector3(newX, newY + enemy.transform.localScale.y - 0.01f, newZ);
                 enemy.SetActive(true);
                 _spawnCounter++;
             }
         }
     }
+
+    public void SpawnFlyingBoss()
+    {
+     
+        StartCoroutine(WaitForX());
+        
+
+    }
+    public void SpawnBoss()
+    {
+        StartCoroutine(WaitForX());
+
+
+    }
+    public IEnumerator WaitForX()
+    {
+        RoundManager.isBossRound = true;
+
+        var enemy = flyingBoss.GetPooledObject();
+        enemy.transform.position = new Vector3(SpawnPoint.transform.position.x, SpawnPoint.transform.position.y + 10 + enemy.transform.localScale.y - 0.01f, SpawnPoint.transform.position.z);
+        enemy.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        RoundManager.isBossRound = false;
+
+    }
+
 }

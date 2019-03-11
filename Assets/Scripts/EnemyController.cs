@@ -31,9 +31,13 @@ public class EnemyController : MonoBehaviour
     {
         _gameManager = GameObject.Find("Game Manager");
         _agent = GetComponent<NavMeshAgent>();
-        _moveToPath = new NavMeshPath();
+        if (_agent)
+        {
+            _moveToPath = new NavMeshPath();
+            _agent.speed = movementSpeed;
+
+        }
         _plManager = _gameManager.GetComponent<PlayerLifeManager>();
-        _agent.speed = movementSpeed;
         _maxHealth = health;
         _gold = _gameManager.GetComponent<GoldManager>();
         _roundManager = _gameManager.GetComponent<RoundManager>();
@@ -65,7 +69,7 @@ public class EnemyController : MonoBehaviour
 
         var endPos = new Vector3(destination.position.x, transform.position.y, destination.position.z);
         //Only use these animations if it is not a flying round
-        if (_curRound % 7 != 0)
+        if (_agent && _curRound % 7 != 0)
         {
             if (_curRound % 5 == 0)
             {
@@ -113,17 +117,25 @@ public class EnemyController : MonoBehaviour
     private void OnEnable()
     {
         _curRound = _roundManager._currentRound;
-        if (_curRound == 1)
+
+        if (_roundManager.isBossRound)
+        {
+            _maxHealth = _curRound * 1100;
+        }
+        else if (_curRound == 1)
         {
             _maxHealth = 10;
         }
-        else if (_curRound % 5 == 0)
-        {
-            _maxHealth = _curRound * 1500;
-        }
         else
         {
-            _maxHealth = Mathf.FloorToInt((10 * 1.5f) * _curRound);
+            _maxHealth = 12 * _curRound;
+        }
+        if(_curRound > 5)
+        {
+            if (_curRound > 10)
+                _maxHealth *= Mathf.Floor(_curRound / 5);
+            else
+                _maxHealth *= 2;
         }
         health = _maxHealth;
         print("health: " + (health));

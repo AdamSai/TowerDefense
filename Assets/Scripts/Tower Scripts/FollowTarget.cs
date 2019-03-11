@@ -8,6 +8,10 @@ public class FollowTarget : MonoBehaviour
     public float projectileHitRange = 1f;
     public float damage = 10f;
     Collider _followTarget;
+    Transform arrow;
+    private void Awake()
+    {
+    }
 
     void Update()
     {

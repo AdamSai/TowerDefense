@@ -103,7 +103,7 @@ public partial class TowerController : MonoBehaviour
             attackCooldown -= 0.1f;
         }
         cost += Mathf.RoundToInt(cost * 1.5f);
-        towerName = towerName + " " + ToRoman(i);
+        towerName = _startName + " " + ToRoman(i);
 
     }
 

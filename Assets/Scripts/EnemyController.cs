@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class EnemyController : MonoBehaviour
     public LayerMask TowerLayer;
     public float _maxHealth { get; private set; }
     public Animator animator;
+    public ObjectPooler healthbarPooler;
     GoldManager _gold;
     float _DestroyTowerTimer;
     NavMeshAgent _agent;
@@ -23,7 +26,9 @@ public class EnemyController : MonoBehaviour
     Collider[] _targets;
     GameObject _gameManager;
     RoundManager _roundManager;
+    Slider healthbar;
     int _curRound;
+    bool lookingForTower = false;
 
 
     // Start is called before the first frame update
@@ -42,30 +47,16 @@ public class EnemyController : MonoBehaviour
         _gold = _gameManager.GetComponent<GoldManager>();
         _roundManager = _gameManager.GetComponent<RoundManager>();
         _curRound = _roundManager._currentRound;
+        healthbar = healthbarPooler.GetPooledObject().GetComponent<Slider>();
+        healthbar.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
+        lookingForTower = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (health <= 0)
-        {
-            int rand;
-            if (_curRound < 10)
-                rand = UnityEngine.Random.Range(1, 4);
-            else if (_curRound < 20)
-                rand = UnityEngine.Random.Range(3, 7);
-            else if (_curRound < 30)
-                rand = UnityEngine.Random.Range(6, 10);
-            else
-                rand = UnityEngine.Random.Range(10, 20);
-            if (_curRound % 5 == 0)
-                rand += 50 * (_curRound / 5);
-            if (_curRound % 7 == 0)
-                rand *= 2;
-            _gold.AddGold(rand);
-            gameObject.SetActive(false);
-        }
+        HandleDeath();
+        HealthbarController();
 
         var endPos = new Vector3(destination.position.x, transform.position.y, destination.position.z);
         //Only use these animations if it is not a flying round
@@ -88,11 +79,17 @@ public class EnemyController : MonoBehaviour
                 StartCoroutine(MoveEnemy());
             }
 
-            if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy && (transform.position - _agent.destination).sqrMagnitude < 1f)
+            if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy)
             {
-                StartCoroutine(LookForTower());
-            }
+                if ((transform.position - _agent.destination).sqrMagnitude < 10f)
+                {
 
+                    if (!lookingForTower)
+                    {
+                        StartCoroutine(LookForTower());
+                    }
+                }
+            }
             if (_agent.pathStatus != NavMeshPathStatus.PathComplete)
             {
                 _DestroyTowerTimer += Time.deltaTime;
@@ -101,6 +98,7 @@ public class EnemyController : MonoBehaviour
             {
                 _DestroyTowerTimer = 0;
             }
+
         }
         else
         {
@@ -114,8 +112,45 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void HealthbarController()
+    {
+        if (healthbar.IsActive())
+        {
+            healthbar.value = health;
+            if (_curRound % 7 == 0)
+                healthbar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z));
+            else
+                healthbar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z));
+        }
+    }
+
+    private void HandleDeath()
+    {
+        if (health <= 0)
+        {
+            int rand;
+            if (_curRound < 10)
+                rand = UnityEngine.Random.Range(1, 4);
+            else if (_curRound < 20)
+                rand = UnityEngine.Random.Range(3, 7);
+            else if (_curRound < 30)
+                rand = UnityEngine.Random.Range(6, 10);
+            else
+                rand = UnityEngine.Random.Range(10, 20);
+            if (_curRound % 5 == 0)
+                rand += 50 * (_curRound / 5);
+            if (_curRound % 7 == 0)
+                rand *= 2;
+            _gold.AddGold(rand);
+
+            gameObject.SetActive(false);
+            healthbar.gameObject.SetActive(false);
+        }
+    }
+
     private void OnEnable()
     {
+        healthbar.gameObject.SetActive(true);
         _curRound = _roundManager._currentRound;
 
         if (_roundManager.isBossRound)
@@ -130,7 +165,7 @@ public class EnemyController : MonoBehaviour
         {
             _maxHealth = 12 * _curRound;
         }
-        if(_curRound > 5)
+        if (_curRound > 5)
         {
             if (_curRound > 10)
                 _maxHealth *= Mathf.Floor(_curRound / 5);
@@ -138,13 +173,15 @@ public class EnemyController : MonoBehaviour
                 _maxHealth *= 2;
         }
         health = _maxHealth;
+        healthbar.maxValue = _maxHealth;
         print("health: " + (health));
     }
 
     private IEnumerator LookForTower()
     {
+        lookingForTower = true;
         Collider ClosestTarget = null;
-        _targets = Physics.OverlapSphere(transform.position, 1f, TowerLayer, QueryTriggerInteraction.Collide);
+        _targets = Physics.OverlapSphere(transform.position, 5f, TowerLayer, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < _targets.Length; i++)
         {
@@ -152,7 +189,7 @@ public class EnemyController : MonoBehaviour
             {
                 ClosestTarget = _targets[0];
             }
-            if ((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude < (_targets[i].transform.position - destination.transform.position).sqrMagnitude)
+            if ((ClosestTarget.transform.position - destination.transform.position).sqrMagnitude > (_targets[i].transform.position - destination.transform.position).sqrMagnitude)
             {
                 ClosestTarget = _targets[i];
             }
@@ -161,7 +198,8 @@ public class EnemyController : MonoBehaviour
         if (_targets.Length > 0)
             DestroyClosestTarget(ClosestTarget);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.1f);
+        lookingForTower = false;
 
     }
 

@@ -46,13 +46,13 @@ public class EnemySpawner : MonoBehaviour
         {
             pooler = flyingBoss;
             SpawnAmount = 1;
-            newY = transform.position.y + 5;
+            newY = transform.position.y + 2;
         }
         else if (RoundManager.isFlyingRound)
         {
             pooler = flyingEnemy;
             SpawnAmount = _regularSpawnAmount;
-            newY = transform.position.y + 5;
+            newY = transform.position.y + 2;
 
         }
         else if (RoundManager.isBossRound)

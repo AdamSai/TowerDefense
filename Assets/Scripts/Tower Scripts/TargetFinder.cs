@@ -21,6 +21,8 @@ public class TargetFinder : MonoBehaviour
         _searching = true;
         if (towerName.StartsWith("Tower"))
             _towerMesh = transform.GetChild(0).GetChild(1);
+        else
+            _towerMesh = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0);
     }
     void FixedUpdate()
     {
@@ -35,13 +37,18 @@ public class TargetFinder : MonoBehaviour
         if (SelectedTarget != null)
         {
             var lookPos = SelectedTarget.transform.position - transform.position;
-            lookPos.y = 0;
-            var rotation = Quaternion.LookRotation(lookPos);
-            if(towerName.StartsWith("Tower"))
+            if (towerName.StartsWith("Tower"))
+            {
+                lookPos.y = 0;
+                var rotation = Quaternion.LookRotation(lookPos);
                 _towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
+
+            }
             else if (towerName.StartsWith("Laser"))
             {
-                transform.rotation = Quaternion.LookRotation(lookPos);// (transform.rotation, rotation, 1);
+                transform.LookAt(new Vector3(SelectedTarget.transform.position.x, transform.position.y, SelectedTarget.transform.position.z));
+
+
             }
 
             if (Vector3.Distance(SelectedTarget.transform.position, transform.position) < range && Debug.isDebugBuild)

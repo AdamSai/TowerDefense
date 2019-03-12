@@ -167,9 +167,9 @@ public class EnemyController : MonoBehaviour
         }
         if (_curRound > 5)
         {
-            if (_curRound > 10)
+            if (_curRound > 10 && _curRound % 7 != 0)
                 _maxHealth *= Mathf.Floor(_curRound / 5);
-            else
+            else if(_curRound % 7 != 0)
                 _maxHealth *= 2;
         }
         health = _maxHealth;

@@ -36,18 +36,22 @@ public class TargetFinder : MonoBehaviour
 
         if (SelectedTarget != null)
         {
-            var lookPos = SelectedTarget.transform.position - transform.position;
+            print(towerName);
+            var lookPos = SelectedTarget.transform.position - _towerMesh.transform.position;
             if (towerName.StartsWith("Tower"))
             {
                 lookPos.y = 0;
                 var rotation = Quaternion.LookRotation(lookPos);
-                _towerMesh.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 100f);
+                _towerMesh.rotation = Quaternion.Slerp(_towerMesh.rotation, rotation, Time.deltaTime * 100f);
 
             }
             else if (towerName.StartsWith("Laser"))
             {
-                transform.LookAt(new Vector3(SelectedTarget.transform.position.x, transform.position.y, SelectedTarget.transform.position.z));
-
+                //transform.LookAt(new Vector3(SelectedTarget.transform.position.x, transform.position.y, SelectedTarget.transform.position.z));
+                lookPos.y = 0;
+                var rotation = Quaternion.LookRotation(lookPos);
+                                                                                            //Model is messed up, so the y rotation is the z rotation and vice versa
+                _towerMesh.localRotation = Quaternion.Slerp(_towerMesh.rotation, new Quaternion(rotation.x, rotation.z, rotation.y, rotation.w), Time.deltaTime * 100f);
 
             }
 

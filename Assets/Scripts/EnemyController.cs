@@ -105,7 +105,7 @@ public class EnemyController : MonoBehaviour
 
         if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy)
         {
-            if ((transform.position - _agent.destination).sqrMagnitude < 5f)
+            if (Vector3.Distance(transform.position, _agent.destination) < 2f)
             {
                 if (!lookingForTower)
                 {

@@ -27,11 +27,11 @@ public class TargetToUI : MonoBehaviour
         }
         else if(_selectedObject)
         {
-            SetSelectedTower(_selectedObject);
+            SetSelectedObject(_selectedObject);
         }
     }
 
-    public void SetSelectedTower(GameObject selectedObject)
+    public void SetSelectedObject(GameObject selectedObject)
     {
         _selectedObject = selectedObject;
         switch (selectedObject.tag)

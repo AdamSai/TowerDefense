@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
+//This class is used to:
+//Set the position of the tower previewbox.
+//See if it is possible to place a tower at the mouse position
+//Create towers at the mouse positioon
+//Delete towers
+//Select / Deselect Towers
+//Enable / disable Target UI & Building UI
 public class PlaceTower : MonoBehaviour
 {
     public NavMeshSurface surface;
@@ -15,7 +22,7 @@ public class PlaceTower : MonoBehaviour
     public float doubleClickTimer = 0.5f;
 
 
-    GoldManager _gold;
+    GoldManager _goldManager;
     Renderer _previewBoxRenderer;
     Vector3 _newPos;
     GameObject selectedObject;
@@ -24,7 +31,7 @@ public class PlaceTower : MonoBehaviour
     TargetToUI _targetInfoUI;
     GameObject _gameManager;
 
-    float _doubleClickTracker;
+    float _doubleClickTimeTracker;
     int _clickCounter = 1;
     bool _trackClickTimer = false;
 
@@ -38,7 +45,7 @@ public class PlaceTower : MonoBehaviour
         _selectedTowers = new List<TowerController>();
         _gameManager = GameObject.Find("Game Manager");
         _towerContainer = GameObject.Find("Towers");
-        _gold = _gameManager.GetComponent<GoldManager>();
+        _goldManager = _gameManager.GetComponent<GoldManager>();
         _targetInfoUI = _gameManager.GetComponent<TargetToUI>();
         _previewBoxRenderer = previewBox.GetComponent<Renderer>();
         _newPos = previewBox.transform.position;
@@ -50,22 +57,22 @@ public class PlaceTower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Prevent raycasting through buttons
+        
         if (Time.timeScale == 0)
             return;
 
-        if (_doubleClickTracker >= doubleClickTimer)
+        if (_doubleClickTimeTracker >= doubleClickTimer)
         {
             _clickCounter = 1;
-            _doubleClickTracker = 0;
+            _doubleClickTimeTracker = 0;
             _trackClickTimer = false;
         }
         if (_trackClickTimer)
         {
-            _doubleClickTracker += Time.deltaTime;
+            _doubleClickTimeTracker += Time.deltaTime;
         }
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, raycastLayer))
         {
             var newPos = CalculateNewPosition(hit);
@@ -76,10 +83,11 @@ public class PlaceTower : MonoBehaviour
                 previewBox.transform.position = newPos;
                 previewBox.SetActive(true);
             }
-
+            //If the build menu is showing
             if (uiController.ShowingBuildUI)
             {
                 _targetInfoUI.parent.SetActive(false);
+                //Remove the green circle from towers if the build menu is open & deselect them
                 if (selectedObject && selectedObject.CompareTag("Tower"))
                 {
                     selectedObject.GetComponent<TowerController>().isSelected = false;
@@ -87,9 +95,9 @@ public class PlaceTower : MonoBehaviour
                     DeselectAllTowers();
                 }
             }
-
             else
                 previewBox.SetActive(false);
+            //If the cursor is over a button, we return to not place a tower behind the button
             if (EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.CompareTag("UI"))
             {
                 return;
@@ -97,12 +105,17 @@ public class PlaceTower : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1"))
             {
+                if (hit.transform.gameObject.tag != "Target" && hit.transform.gameObject.tag != "Tower")
+                {
+                    DeselectAllTowers();
+                    _targetInfoUI.parent.SetActive(false);
+                }
                 if (selectedObject)
                 {
+                    //Deselect current tower if we click on a new tower
                     if (selectedObject.CompareTag("Tower") && selectedObject != hit.transform.gameObject && hit.transform.CompareTag("Tower"))
                     {
                         SelectOrDeselectTowersByName(false, selectedObject.GetComponent<TowerController>());
-
                         selectedObject.GetComponent<TowerController>().isSelected = false;
 
                     }
@@ -122,7 +135,8 @@ public class PlaceTower : MonoBehaviour
                 //Select target to display in UI
                 else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
-                    if (selectedObject == hit.transform.gameObject && _trackClickTimer)
+                    //If we double click the same tower, increase the counter
+                    if (selectedObject == hit.transform.gameObject)
                     {
                         _trackClickTimer = true;
                         if (_clickCounter == 1)
@@ -130,12 +144,14 @@ public class PlaceTower : MonoBehaviour
                         else
                             _clickCounter = 1;
                     }
+                    //If we are clicking a new tower, reset the double click timer
                     else
                     {
                         _trackClickTimer = true;
                         _clickCounter = 1;
-                        _doubleClickTracker = 0;
+                        _doubleClickTimeTracker = 0;
                     }
+                    //On double click, select all towers with the same name
                     if (_clickCounter % 2 == 0 && _selectedTowers.Count > 0)
                     {
                         SelectOrDeselectTowersByName(true, selectedObject.GetComponent<TowerController>());
@@ -149,7 +165,7 @@ public class PlaceTower : MonoBehaviour
                             selectedObject.GetComponent<TowerController>().isSelected = true;
                             _selectedTowers.Add(selectedObject.GetComponent<TowerController>());
                         }
-                        _targetInfoUI.SetSelectedTower(selectedObject);
+                        _targetInfoUI.SetSelectedObject(selectedObject);
                         _targetInfoUI.parent.SetActive(true);
                     }
                 }
@@ -181,8 +197,9 @@ public class PlaceTower : MonoBehaviour
         }
         //The selected object is added in the last index, so it will always be the first element to be upgraded
         //when we loop backwards through the list.
-        //We loop backwards in case we need to remove an element from the list while iterating in other parts of the code
+        //We loop backwards trhoughs the list in other parts of the code to avoid index out of range exception
         _selectedTowers.Add(selectedObject.GetComponent<TowerController>());
+
         foreach (TowerController tower in _selectedTowers)
         {
             if (tower.towerName == selectedTower.towerName)
@@ -224,20 +241,20 @@ public class PlaceTower : MonoBehaviour
 
     private void CreateTower(Vector3 newPos)
     {
-        var box = objectPooler.GetPooledObject();
-        var cost = box.GetComponent<TowerController>().cost;
-        if (_gold.Gold >= cost)
+        var tower = objectPooler.GetPooledObject();
+        var cost = tower.GetComponent<TowerController>().cost;
+        if (_goldManager.Gold >= cost)
         {
-            if (box == null)
+            if (tower == null)
                 return;
+            _goldManager.RemoveGold(cost);
+            tower.transform.position = newPos;
+            tower.SetActive(true);
             StartCoroutine(BuildNavMesh());
-            _gold.RemoveGold(cost);
-            box.transform.position = newPos;
-            box.SetActive(true);
         }
         else
         {
-            StartCoroutine(_gold.DisplayErrorText());
+            StartCoroutine(_goldManager.DisplayErrorText());
         }
     }
 
@@ -245,7 +262,7 @@ public class PlaceTower : MonoBehaviour
     {
         foreach (TowerController tower in _selectedTowers)
         {
-            _gold.AddGold(tower.cost / 4);
+            _goldManager.AddGold(tower.cost / 4);
             tower.gameObject.SetActive(false);
             _targetInfoUI.parent.SetActive(false);
         }
@@ -259,24 +276,24 @@ public class PlaceTower : MonoBehaviour
         for (int i = _selectedTowers.Count - 1; i >= 0; i--)
         {
             //If no towers can be upgraded, break so the towers aren't deselected
-            if (i == _selectedTowers.Count - 1 && _gold.Gold < _selectedTowers[i].cost)
+            if (i == _selectedTowers.Count - 1 && _goldManager.Gold < _selectedTowers[i].cost)
             {
-                StartCoroutine(_gold.DisplayErrorText());
+                StartCoroutine(_goldManager.DisplayErrorText());
                 break;
             }
-            else if (_gold.Gold >= _selectedTowers[i].cost)
+            else if (_goldManager.Gold >= _selectedTowers[i].cost)
             {
-                _gold.RemoveGold(_selectedTowers[i].cost);
+                _goldManager.RemoveGold(_selectedTowers[i].cost);
                 _selectedTowers[i].UpgradeTower();
                 upgradedTower = _selectedTowers[i];
             }
-            else if (_gold.Gold < _selectedTowers[i].cost)
+            else if (_goldManager.Gold < _selectedTowers[i].cost)
             {
-                StartCoroutine(_gold.DisplayErrorText());
+                StartCoroutine(_goldManager.DisplayErrorText());
                 break;
             }
         }
-        //Deselected towers which have not been upgraded
+        //Deselect towers which have not been upgraded
         if (upgradedTower)
         {
             for (int i = _selectedTowers.Count - 1; i >= 0; i--)

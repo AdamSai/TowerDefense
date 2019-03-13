@@ -58,19 +58,21 @@ public class RoundManager : MonoBehaviour
     IEnumerator StartRound()
     {
         timerText.text = "";
-        if (_currentRound % 7 == 0 && _currentRound % 5 == 0)
+        if (_currentRound % 7 == 0)
         {
-            isBossRound = true;
             isFlyingRound = true;
         }
-        else if (_currentRound % 5 == 0)
+        else
+        {
+            isFlyingRound = false;
+        }
+        if (_currentRound % 5 == 0)
+        {
             isBossRound = true;
-        else if (_currentRound % 7 == 0)
-            isFlyingRound = true;
+        }
         else
         {
             isBossRound = false;
-            isFlyingRound = false;
         }
         _enemySpawner.SpawnEnemies();
         _isEndOfRound = false;

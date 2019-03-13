@@ -123,9 +123,9 @@ public class EnemyController : MonoBehaviour
         {
             healthbar.value = health;
             if (_curRound % 7 == 0)
-                healthbar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z));
+                healthbar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z + 2));
             else
-                healthbar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z));
+                healthbar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z + 2));
         }
     }
 

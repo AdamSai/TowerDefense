@@ -36,7 +36,6 @@ public class TargetFinder : MonoBehaviour
 
         if (SelectedTarget != null)
         {
-            print(towerName);
             var lookPos = SelectedTarget.transform.position - _towerMesh.transform.position;
             if (towerName.StartsWith("Tower"))
             {

@@ -81,7 +81,7 @@ public class EnemyController : MonoBehaviour
 
             if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy)
             {
-                if ((transform.position - _agent.destination).sqrMagnitude < 10f)
+                if ((transform.position - _agent.destination).sqrMagnitude < 5f)
                 {
 
                     if (!lookingForTower)
@@ -107,8 +107,13 @@ public class EnemyController : MonoBehaviour
         }
         if ((transform.position - endPos).sqrMagnitude < 0.1f)
         {
+            if (_curRound % 5 == 0)
+            {
+                _plManager.DecrementLife(5);
+            }
+            else
+                _plManager.DecrementLife(1);
             gameObject.SetActive(false);
-            _plManager.DecrementLife();
         }
     }
 
@@ -169,19 +174,19 @@ public class EnemyController : MonoBehaviour
         {
             if (_curRound > 10 && _curRound % 7 != 0)
                 _maxHealth *= Mathf.Floor(_curRound / 5);
-            else if(_curRound % 7 != 0)
+            else if (_curRound % 7 != 0)
                 _maxHealth *= 2;
         }
         health = _maxHealth;
         healthbar.maxValue = _maxHealth;
-        print("health: " + (health));
+        Debug.Log("health: " + (health));
     }
 
     private IEnumerator LookForTower()
     {
         lookingForTower = true;
         Collider ClosestTarget = null;
-        _targets = Physics.OverlapSphere(transform.position, 5f, TowerLayer, QueryTriggerInteraction.Collide);
+        _targets = Physics.OverlapSphere(transform.position, 2f, TowerLayer, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < _targets.Length; i++)
         {
@@ -198,7 +203,7 @@ public class EnemyController : MonoBehaviour
         if (_targets.Length > 0)
             DestroyClosestTarget(ClosestTarget);
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1f);
         lookingForTower = false;
 
     }

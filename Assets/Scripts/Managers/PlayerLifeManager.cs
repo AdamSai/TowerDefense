@@ -22,10 +22,10 @@ public class PlayerLifeManager : MonoBehaviour
     }
 
 
-    public void DecrementLife()
+    public void DecrementLife(int amount)
     {
         StartCoroutine(ScaleText());
-        life--;
+        life -= amount;
         lifeText.text = $"Lives: {life.ToString()}";
         if(life <= 0)
         {

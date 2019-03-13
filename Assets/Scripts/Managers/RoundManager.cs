@@ -8,11 +8,12 @@ public class RoundManager : MonoBehaviour
     public int AmountOfRounds = 10;
     public float EndOfRoundTime = 30f;
     public Transform enemyContainer;
-    public int _currentRound { get; private set; } = 1;
+    public int _currentRound  = 1;
     public TextMeshProUGUI roundText;
     public TextMeshProUGUI timerText;
     public bool isFlyingRound  = false;
     public bool isBossRound  = false;
+    public GameObject startEarlybutton;
     float _endOfRoundTracker = 0f;
     bool _isEndOfRound = true;
     Transform[] _enemies;
@@ -45,13 +46,18 @@ public class RoundManager : MonoBehaviour
         if (_endOfRoundTracker >= EndOfRoundTime)
         {
             StartCoroutine(StartRound());
-            timerText.text = "";
         }
+        if (_isEndOfRound && Time.timeScale > 0)
+            startEarlybutton.SetActive(true);
+        else
+            startEarlybutton.SetActive(false);
+
     }
 
 
     IEnumerator StartRound()
     {
+        timerText.text = "";
         if (_currentRound % 7 == 0 && _currentRound % 5 == 0)
         {
             isBossRound = true;
@@ -77,6 +83,11 @@ public class RoundManager : MonoBehaviour
             EndOfRoundTime = 15f;
         _isEndOfRound = true;
         roundText.text = $"Round: {((_currentRound < 10) ? $"0{_currentRound}" : _currentRound.ToString())}";
+    }
 
+    public void StartRoundEarly()
+    {
+        _endOfRoundTracker = 0.01f;
+        StartCoroutine(StartRound());
     }
 }

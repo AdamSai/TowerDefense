@@ -8,7 +8,6 @@ public class PlaceTower : MonoBehaviour
 {
     public NavMeshSurface surface;
     public LayerMask raycastLayer; //Layers that the initial raycast will hit
-    public LayerMask blockingLayer; //Layers that blocks placement of towers
     public GameObject previewBox;
     private ObjectPooler objectPooler;
     public bool canPlaceTower = true;

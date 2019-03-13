@@ -59,52 +59,18 @@ public class EnemyController : MonoBehaviour
         HealthbarController();
 
         var endPos = new Vector3(destination.position.x, transform.position.y, destination.position.z);
-        //Only use these animations if it is not a flying round
+        //If it is not a flying round, use NavMeshAgent
         if (_agent && _curRound % 7 != 0)
         {
-            if (_curRound % 5 == 0)
-            {
-                animator.SetBool("isWalking", true);
-                animator.SetBool("isRunning", false);
-            }
-            else
-            {
-                animator.SetBool("isWalking", false);
-                animator.SetBool("isRunning", true);
-            }
-
-            if (gameObject.activeInHierarchy)
-            {
-                NavMesh.CalculatePath(transform.position, destination.position, _agent.areaMask, _moveToPath);
-                StartCoroutine(MoveEnemy());
-            }
-
-            if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy)
-            {
-                if ((transform.position - _agent.destination).sqrMagnitude < 5f)
-                {
-
-                    if (!lookingForTower)
-                    {
-                        StartCoroutine(LookForTower());
-                    }
-                }
-            }
-            if (_agent.pathStatus != NavMeshPathStatus.PathComplete)
-            {
-                _DestroyTowerTimer += Time.deltaTime;
-            }
-            else
-            {
-                _DestroyTowerTimer = 0;
-            }
-
+            NavMeshSettings();
         }
+        //If it is a flying round, just move directly towards the end position
         else
         {
             transform.LookAt(endPos);
             transform.position = Vector3.MoveTowards(transform.position, endPos, movementSpeed * Time.deltaTime);
         }
+        //If enemy reaches the end position, player loses lives
         if ((transform.position - endPos).sqrMagnitude < 0.1f)
         {
             if (_curRound % 5 == 0)
@@ -114,6 +80,46 @@ public class EnemyController : MonoBehaviour
             else
                 _plManager.DecrementLife(1);
             gameObject.SetActive(false);
+        }
+    }
+
+    private void NavMeshSettings()
+    {
+        //Set walking animation for boss rounds & running animation for regular rounds
+        if (_curRound % 5 == 0)
+        {
+            animator.SetBool("isWalking", true);
+            animator.SetBool("isRunning", false);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", true);
+        }
+                                             //Calculate every 30 frames
+        if (gameObject.activeInHierarchy && Time.frameCount % 30 == 0)
+        {
+            NavMesh.CalculatePath(transform.position, destination.position, _agent.areaMask, _moveToPath);
+            StartCoroutine(MoveEnemy());
+        }
+
+        if (_DestroyTowerTimer >= timeToDestroyIfNoPath && gameObject.activeInHierarchy)
+        {
+            if ((transform.position - _agent.destination).sqrMagnitude < 5f)
+            {
+                if (!lookingForTower)
+                {
+                    StartCoroutine(LookForTower());
+                }
+            }
+        }
+        if (_agent.pathStatus != NavMeshPathStatus.PathComplete)
+        {
+            _DestroyTowerTimer += Time.deltaTime;
+        }
+        else
+        {
+            _DestroyTowerTimer = 0;
         }
     }
 

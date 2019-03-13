@@ -135,8 +135,8 @@ public class PlaceTower : MonoBehaviour
                 //Select target to display in UI
                 else if (!uiController.ShowingBuildUI && (hit.transform.tag == "Tower" || hit.transform.tag == "Target"))
                 {
-                    //If we double click the same tower, increase the counter
-                    if (selectedObject == hit.transform.gameObject)
+                    //If we have clicked once within the double click time period, increase the counter or set it back to 1 to avoid weird behavior if it increases to a value > 2
+                    if (selectedObject == hit.transform.gameObject && _trackClickTimer)
                     {
                         _trackClickTimer = true;
                         if (_clickCounter == 1)
